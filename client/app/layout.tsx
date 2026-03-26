@@ -56,7 +56,6 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
         <body className="min-h-full flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)] antialiased">
-          <h1>HELLOW</h1>
         <ClerkProvider> 
           <TokenExtractor initialToken={initialToken} />
           <ApiAuthHandler />
