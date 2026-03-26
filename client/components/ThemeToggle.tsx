@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { enable, disable, isEnabled } from 'darkreader';
 import { HiMoon, HiSun } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 
@@ -9,25 +8,28 @@ export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Initial theme setup
-    const savedTheme = localStorage.getItem('theme');
-    const darkModeEnabled = savedTheme === 'dark';
-    
-    if (darkModeEnabled) {
-      enable({
-        brightness: 100,
-        contrast: 90,
-        sepia: 10,
-      });
-    } else {
-      disable();
-    }
-    
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsDark(darkModeEnabled);
+    // Dynamically import darkreader to avoid "window is not defined" during SSR
+    import('darkreader').then(({ enable, disable }) => {
+      const savedTheme = localStorage.getItem('theme');
+      const darkModeEnabled = savedTheme === 'dark';
+
+      if (darkModeEnabled) {
+        enable({
+          brightness: 100,
+          contrast: 90,
+          sepia: 10,
+        });
+      } else {
+        disable();
+      }
+
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsDark(darkModeEnabled);
+    });
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = async () => {
+    const { enable, disable, isEnabled } = await import('darkreader');
     if (isEnabled()) {
       disable();
       setIsDark(false);
