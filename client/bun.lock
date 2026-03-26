@@ -5,7 +5,7 @@
     "": {
       "name": "frontend",
       "dependencies": {
-        "@clerk/nextjs": "^7.0.6",
+        "@clerk/nextjs": "^7.0.7",
         "@react-three/drei": "^10.7.7",
         "@react-three/fiber": "^9.5.0",
         "@types/d3": "^7.4.3",
