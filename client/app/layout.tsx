@@ -54,9 +54,9 @@ export default async function RootLayout({
   const initialToken = await getToken();
 
   return (
-    <ClerkProvider>
-      <html lang="en" className={`${inter.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} h-full`}>
         <body className="min-h-full flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)] antialiased">
+        <ClerkProvider>
           <TokenExtractor initialToken={initialToken} />
           <ApiAuthHandler />
           <LenisProvider>
@@ -64,8 +64,8 @@ export default async function RootLayout({
               {children}
             </main>
           </LenisProvider>
+        </ClerkProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
 }
