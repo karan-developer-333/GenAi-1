@@ -1,12 +1,12 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default clerkMiddleware();
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const { userId } = await auth();
 
+  if (!userId) {
+    return redirect("/sign-in");
+  }
 
-
-export const config = {
-  matcher: [
-    "/((?!_next|.*\\..*).*)",
-    "/(api|trpc)(.*)",
-  ],
-};
+  return children;
+}
