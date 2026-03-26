@@ -3,7 +3,7 @@
  * Handles context menus, API requests, and offline queuing.
  */
 
-const API_ENDPOINT = 'https://gen-ai-1-backend.vercel.app/api/items/save';
+const API_ENDPOINT = 'https://genai-1-ilh4.onrender.com/api/items/save';
 
 // Create context menu on installation
 chrome.runtime.onInstalled.addListener(() => {

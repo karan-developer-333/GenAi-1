@@ -4,7 +4,7 @@
  * Image data persisted via chrome.storage.local
  */
 
-const API_ENDPOINT = 'https://gen-ai-1-backend.vercel.app/api/items/save';
+const API_ENDPOINT = 'https://genai-1-ilh4.onrender.com/api/items/save';
 
 // Source type metadata
 const SOURCE_TYPES = {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function checkStatus() {
         try {
             const { userId } = await chrome.storage.local.get(['userId']);
-            const res = await fetch('https://gen-ai-1-backend.vercel.app/api/items', {
+            const res = await fetch('https://genai-1-ilh4.onrender.com/api/items', {
                 method: 'GET',
                 headers: { 'x-user-id': userId || 'anon' }
             });
