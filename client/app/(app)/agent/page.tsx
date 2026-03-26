@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { HiSparkles, HiArrowRight, HiOutlineGlobeAlt, HiOutlineLightBulb, HiOutlineBookOpen } from 'react-icons/hi2';
 import { FiCpu, FiUser } from 'react-icons/fi';
-import { AgentResponse, sendMessage } from '@/services/AgentService';
+import { sendMessage } from '@/services/AgentService';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 
