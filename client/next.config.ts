@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // Transpile Three.js ecosystem
-  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', '@clerk/nextjs', '@clerk/shared'],
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
    allowedDevOrigins: ["10.38.214.34"],
   // Enable React strict mode for better development warnings
   reactStrictMode: true,
