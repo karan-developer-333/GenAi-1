@@ -4,52 +4,52 @@
  * Image data persisted via chrome.storage.local
  */
 
-const API_ENDPOINT = 'http://localhost:3000/api/items/save';
+const API_ENDPOINT = 'https://gen-ai-1-backend.vercel.app/api/items/save';
 
 // Source type metadata
 const SOURCE_TYPES = {
-    article: { label: 'Article',  icon: '📰', hint: 'Select text from the article to capture.', showText: true },
-    tweet:   { label: 'Tweet',    icon: '🐦', hint: 'Select the tweet text to capture.', showText: true },
-    image:   { label: 'Image',    icon: '🖼️', hint: 'Use the image picker to select an image.', showText: true },
-    youtube: { label: 'YouTube',  icon: '📺', hint: 'YouTube video URL will be saved.', showText: false },
-    video:   { label: 'Video',    icon: '🎬', hint: 'Select text or save the video page URL.', showText: true },
-    pdf:     { label: 'PDF',      icon: '📄', hint: 'PDF URL will be saved.', showText: false },
+    article: { label: 'Article', icon: '📰', hint: 'Select text from the article to capture.', showText: true },
+    tweet: { label: 'Tweet', icon: '🐦', hint: 'Select the tweet text to capture.', showText: true },
+    image: { label: 'Image', icon: '🖼️', hint: 'Use the image picker to select an image.', showText: true },
+    youtube: { label: 'YouTube', icon: '📺', hint: 'YouTube video URL will be saved.', showText: false },
+    video: { label: 'Video', icon: '🎬', hint: 'Select text or save the video page URL.', showText: true },
+    pdf: { label: 'PDF', icon: '📄', hint: 'PDF URL will be saved.', showText: false },
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const pageTitleEl     = document.getElementById('page-title');
-    const pageUrlEl       = document.getElementById('page-url');
+    const pageTitleEl = document.getElementById('page-title');
+    const pageUrlEl = document.getElementById('page-url');
     const selectionTextEl = document.getElementById('selection-text');
-    const selectionField  = document.getElementById('selection-field');
-    const noteInputEl     = document.getElementById('note-input');
-    const saveBtn         = document.getElementById('save-btn');
-    const messageEl       = document.getElementById('message');
+    const selectionField = document.getElementById('selection-field');
+    const noteInputEl = document.getElementById('note-input');
+    const saveBtn = document.getElementById('save-btn');
+    const messageEl = document.getElementById('message');
     const statusIndicator = document.getElementById('status-indicator');
 
     // Settings elements
-    const settingsToggle  = document.getElementById('settings-toggle');
-    const settingsPanel   = document.getElementById('settings-panel');
-    const userIdInput     = document.getElementById('user-id-input');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsPanel = document.getElementById('settings-panel');
+    const userIdInput = document.getElementById('user-id-input');
     const saveSettingsBtn = document.getElementById('save-settings-btn');
 
     // Source chips
-    const chips           = document.querySelectorAll('.source-chip');
+    const chips = document.querySelectorAll('.source-chip');
 
     // Image section elements
-    const imageSection    = document.getElementById('image-section');
-    const selectImageBtn  = document.getElementById('select-image-btn');
-    const imageInfoCard   = document.getElementById('image-info-card');
-    const imagePreview    = document.getElementById('image-preview');
+    const imageSection = document.getElementById('image-section');
+    const selectImageBtn = document.getElementById('select-image-btn');
+    const imageInfoCard = document.getElementById('image-info-card');
+    const imagePreview = document.getElementById('image-preview');
     const imageAltDisplay = document.getElementById('image-alt-display');
     const imageUrlDisplay = document.getElementById('image-url-display');
-    const clearImageBtn   = document.getElementById('clear-image-btn');
-    const pickerBadge     = document.getElementById('picker-active-badge');
+    const clearImageBtn = document.getElementById('clear-image-btn');
+    const pickerBadge = document.getElementById('picker-active-badge');
 
-    let currentTabData   = null;
+    let currentTabData = null;
     let selectedImageUrl = null;
-    let pickerActive     = false;
-    let selectedType     = null;   // currently selected source type
-    let savedUserId      = '';
+    let pickerActive = false;
+    let selectedType = null;   // currently selected source type
+    let savedUserId = '';
 
     // ─── Settings Logic ──────────────────────────────────────────────────────
     chrome.storage.local.get(['userId'], (result) => {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function checkStatus() {
         try {
             const { userId } = await chrome.storage.local.get(['userId']);
-            const res = await fetch('http://localhost:3000/api/items', { 
+            const res = await fetch('https://gen-ai-1-backend.vercel.app/api/items', {
                 method: 'GET',
                 headers: { 'x-user-id': userId || 'anon' }
             });
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             statusIndicator.classList.remove('online');
         }
     }
-    
+
     checkStatus();
 
     // ─── Tab Info + Text Selection ───────────────────────────────────────────
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (tab) {
         pageTitleEl.textContent = tab.title || 'Untitled Page';
-        pageUrlEl.textContent   = tab.url   || 'No URL';
+        pageUrlEl.textContent = tab.url || 'No URL';
         currentTabData = { url: tab.url, title: tab.title };
 
         // Auto-detect type from URL
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function autoDetectType(url) {
         if (!url) return;
         const lowUrl = url.toLowerCase();
-        
+
         if (lowUrl.includes('youtube.com/watch') || lowUrl.includes('youtu.be/')) {
             selectType('youtube');
         } else if (lowUrl.includes('twitter.com') || lowUrl.includes('x.com')) {
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const needsText = meta && meta.showText;
-        
+
         if (needsText && !text && !selectedImageUrl) {
             showMessage('Please capture some content or select an image.', 'error');
             return;
@@ -235,21 +235,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const dataToSave = {
             ...currentTabData,
-            sourceType:  selectedType,
+            sourceType: selectedType,
             selectedText: text || null,
-            note:         note || null,
-            timestamp:    new Date().toISOString(),
-            imageUrl:     selectedImageUrl || null,
-            imageAlt:     (imageAltDisplay.textContent !== '—') ? imageAltDisplay.textContent : null
+            note: note || null,
+            timestamp: new Date().toISOString(),
+            imageUrl: selectedImageUrl || null,
+            imageAlt: (imageAltDisplay.textContent !== '—') ? imageAltDisplay.textContent : null
         };
 
-        saveBtn.disabled    = true;
+        saveBtn.disabled = true;
         saveBtn.textContent = 'Saving...';
 
         try {
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'x-user-id': savedUserId
                 },
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 queue.push(dataToSave);
                 chrome.storage.local.set({ offlineQueue: queue });
             });
-            saveBtn.disabled    = false;
+            saveBtn.disabled = false;
             saveBtn.textContent = 'Queued Locally';
         }
     });
@@ -280,12 +280,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ─── Helpers ──────────────────────────────────────────────────────────────
     function applyImageData(imageUrl, altText) {
         selectedImageUrl = imageUrl;
-        imagePreview.src            = imageUrl;
-        imagePreview.alt            = altText;
+        imagePreview.src = imageUrl;
+        imagePreview.alt = altText;
         imageAltDisplay.textContent = altText || '(no alt text)';
-        imageAltDisplay.title       = altText || '';
+        imageAltDisplay.title = altText || '';
         imageUrlDisplay.textContent = imageUrl;
-        imageUrlDisplay.title       = imageUrl;
+        imageUrlDisplay.title = imageUrl;
         imageInfoCard.classList.remove('hidden');
         selectImageBtn.innerHTML = '<span class="btn-icon">✅</span> Image Selected';
         selectImageBtn.classList.remove('active');
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectImageBtn.innerHTML = '<span class="btn-icon">🖼️</span> Select Image';
         selectImageBtn.classList.remove('active');
         pickerBadge.classList.add('hidden');
-        try { await chrome.tabs.sendMessage(tab.id, { action: 'DISABLE_IMAGE_PICKER' }); } catch {}
+        try { await chrome.tabs.sendMessage(tab.id, { action: 'DISABLE_IMAGE_PICKER' }); } catch { }
     }
 
     function clearImage() {
@@ -313,6 +313,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showMessage(msg, type) {
         messageEl.textContent = msg;
-        messageEl.className   = `message ${type}`;
+        messageEl.className = `message ${type}`;
     }
 });

@@ -3,7 +3,7 @@
  * Handles context menus, API requests, and offline queuing.
  */
 
-const API_ENDPOINT = 'http://localhost:3000/api/items/save';
+const API_ENDPOINT = 'https://gen-ai-1-backend.vercel.app/api/items/save';
 
 // Create context menu on installation
 chrome.runtime.onInstalled.addListener(() => {
@@ -34,7 +34,7 @@ async function saveItem(data) {
     try {
         // Get userId from storage
         const { userId } = await chrome.storage.local.get(['userId']);
-        
+
         if (!userId) {
             console.warn('No User ID configured in extension settings.');
             notifyUser('Setup Needed', 'Please set your User ID in the extension settings ⚙️');
