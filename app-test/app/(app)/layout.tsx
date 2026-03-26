@@ -1,18 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
-import { ClerkProvider } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import './globals.css';
-import LenisProvider from '@/components/LenisProvider';
-import ApiAuthHandler from '@/components/ApiAuthHandler';
-import TokenExtractor from '@/components/TokenExtractor';
+import Navbar from './Navbar';
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-});
 
 export const metadata: Metadata = {
   title: 'MnemoAI — Your Second Brain for the Internet',
@@ -39,34 +27,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#080810',
-  colorScheme: 'dark',
+  themeColor: '#faf8f5',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { getToken } = await auth();
-  const initialToken = await getToken();
-
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
-        <body className="min-h-full flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)] antialiased">
-          <h1>HELLOW</h1>
-        {/* <ClerkProvider> */}
-          <TokenExtractor initialToken={initialToken} />
-          <ApiAuthHandler />
-          <LenisProvider>
-            <main className="flex-1">
-              {children}
-            </main>
-          </LenisProvider>
-        {/* </ClerkProvider> */}
-        </body>
-      </html>
+      <div className="min-h-screen flex flex-col bg-[var(--bg-cream)] text-[var(--text-primary)] antialiased">
+
+                <Navbar  />
+          <main className="flex-1 mt-12 relative">
+            {children}
+          </main>
+      </div>
   );
 }
