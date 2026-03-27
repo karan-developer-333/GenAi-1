@@ -16,6 +16,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'MnemoAI — Your Second Brain for the Internet',
+  icons:{
+    icon:"/icon.png",
+  },
   description:
     'Save articles, tweets, videos and PDFs. MnemoAI automatically organizes, tags and resurfaces your saved knowledge with AI-powered semantic search and graph visualization.',
   keywords: ['AI knowledge management', 'personal knowledge base', 'semantic search', 'second brain', 'AI bookmarks'],

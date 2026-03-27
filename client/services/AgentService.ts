@@ -14,6 +14,6 @@ export interface AgentResponse {
 }
 
 export const sendMessage = async (query: string): Promise<AgentResponse> => {
-  const res = await api.post('/api/agent/chat', { query });
+  const res = await api.post('/agent/chat', { query });
   return res.data;
 };

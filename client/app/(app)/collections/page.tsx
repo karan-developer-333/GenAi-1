@@ -38,7 +38,7 @@ export default function CollectionsPage() {
         } else {
           data = await getItems();
         }
-        setItems(data);
+        setItems(data.items);
       } catch (error) {
         console.error("Failed to fetch items:", error);
       } finally {

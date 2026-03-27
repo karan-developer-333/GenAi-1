@@ -1,9 +1,28 @@
-import { fetchItems } from "@/services/item.service"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
+import { getAllItems, saveItem } from '@/lib/services/ItemService';
 
-export const GET = async () => {
+export async function GET(req: NextRequest) {
+  const userId = await getAuthUserId(req);
+  if (!userId) return unauthorizedResponse();
 
-    const data = await fetchItems();
+  try {
+    const items = await getAllItems(userId);
+    return NextResponse.json({ items });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
 
-    return NextResponse.json(data)
+export async function POST(req: NextRequest) {
+  const userId = await getAuthUserId(req);
+  if (!userId) return unauthorizedResponse();
+
+  try {
+    const body = await req.json();
+    const item = await saveItem({ ...body, userId });
+    return NextResponse.json(item);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
