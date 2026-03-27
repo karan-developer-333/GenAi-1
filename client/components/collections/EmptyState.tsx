@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Search, FolderOpen, Sparkles } from 'lucide-react';
 
 interface EmptyStateProps {
   hasSearchQuery: boolean;
@@ -11,32 +12,46 @@ export default function EmptyState({ hasSearchQuery }: EmptyStateProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col items-center justify-center py-20 px-4"
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col items-center justify-center py-32 px-4 text-center"
     >
-      <div className="relative mb-8">
-        <div className="w-24 h-24 rounded-full bg-amber-50 flex items-center justify-center">
+      <div className="relative mb-10 group">
+        <div className="absolute inset-0 bg-[#539AE9]/20 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity" />
+        <div className="relative w-24 h-24 rounded-[32px] bg-[#09153C]/60 backdrop-blur-xl border border-[#539AE9]/20 flex items-center justify-center shadow-2xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#153081]/20 to-transparent" />
           {hasSearchQuery ? (
-            <svg className="w-12 h-12 text-[var(--amber-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Search className="w-10 h-10 text-[#539AE9] relative z-10" />
           ) : (
-            <svg className="w-12 h-12 text-[var(--amber-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
+            <FolderOpen className="w-10 h-10 text-[#539AE9] relative z-10" />
           )}
         </div>
-        <div className="absolute -inset-4 bg-[var(--amber-primary)]/5 rounded-full blur-2xl" />
+        
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-2 -right-2 p-1.5 rounded-lg bg-[#2655C7] text-white shadow-lg border border-white/10"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+        </motion.div>
       </div>
 
-      <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">
-        {hasSearchQuery ? 'No matching items' : 'No items saved yet'}
+      <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">
+        {hasSearchQuery ? 'Zero Nodes Replicated' : 'Void Detected in Library'}
       </h3>
-      <p className="text-[var(--text-muted)] text-center max-w-sm mb-6">
+      <p className="text-[#A8B3CF] text-center max-w-sm mb-8 font-medium leading-relaxed">
         {hasSearchQuery
-          ? "We couldn't find any items matching your search. Try a different term."
-          : "Your saved knowledge will appear here once you start capturing articles and insights."}
+          ? "No data clusters match your current query parameters. Try widening your search horizon."
+          : "Your neural workspace is currently offline. Synchronize your first knowledge node to begin expansion."}
       </p>
+
+      {hasSearchQuery && (
+        <button 
+          onClick={() => window.location.reload()}
+          className="px-6 py-2.5 rounded-2xl bg-[#539AE9]/10 text-[#539AE9] border border-[#539AE9]/20 font-bold text-sm hover:bg-[#539AE9]/20 transition-all active:scale-95"
+        >
+          Reset Signal
+        </button>
+      )}
     </motion.div>
   );
 }

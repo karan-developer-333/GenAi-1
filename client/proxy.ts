@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server'
 const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)'])
 
 export default clerkMiddleware(async (auth, request: NextRequest) => {
+  console.log(`[MIDDLEWARE] Handling request: ${request.nextUrl.pathname}`);
   if (!isPublicRoute(request)) {
     await auth.protect()
   }

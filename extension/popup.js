@@ -1,250 +1,172 @@
 /**
- * Popup logic for "Save to Knowledge"
- * Source type selector: article, tweet, image, youtube, video, pdf
- * Image data persisted via chrome.storage.local
+ * Knowledge OS - Popup Logic
+ * Modernized for Sandra AI Theme
  */
 
-const API_ENDPOINT = 'https://genai-1-ilh4.onrender.com/api/items/save';
+const API_ENDPOINT = 'https://gen-ai-1-testing1234.vercel.app/api/items/save';
 
-// Source type metadata
+// Source type metadata mapping
 const SOURCE_TYPES = {
-    article: { label: 'Article', icon: '📰', hint: 'Select text from the article to capture.', showText: true },
-    tweet: { label: 'Tweet', icon: '🐦', hint: 'Select the tweet text to capture.', showText: true },
-    image: { label: 'Image', icon: '🖼️', hint: 'Use the image picker to select an image.', showText: true },
-    youtube: { label: 'YouTube', icon: '📺', hint: 'YouTube video URL will be saved.', showText: false },
-    video: { label: 'Video', icon: '🎬', hint: 'Select text or save the video page URL.', showText: true },
-    pdf: { label: 'PDF', icon: '📄', hint: 'PDF URL will be saved.', showText: false },
+    article: { label: 'Article', icon: '📰', showText: true },
+    tweet: { label: 'Tweet', showText: true },
+    image: { label: 'Image', showText: true },
+    youtube: { label: 'YouTube', showText: false },
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const pageTitleEl = document.getElementById('page-title');
-    const pageUrlEl = document.getElementById('page-url');
-    const selectionTextEl = document.getElementById('selection-text');
-    const selectionField = document.getElementById('selection-field');
-    const noteInputEl = document.getElementById('note-input');
-    const saveBtn = document.getElementById('save-btn');
-    const messageEl = document.getElementById('message');
-    const statusIndicator = document.getElementById('status-indicator');
+    // --- Selectors ---
+    const elements = {
+        selectionText: document.getElementById('selection-text'),
+        selectionField: document.getElementById('selection-field'),
+        noteInput: document.getElementById('note-input'),
+        saveBtn: document.getElementById('save-btn'),
+        message: document.getElementById('message'),
+        statusIndicator: document.getElementById('status-indicator'),
 
-    // Settings elements
-    const settingsToggle = document.getElementById('settings-toggle');
-    const settingsPanel = document.getElementById('settings-panel');
-    const userIdInput = document.getElementById('user-id-input');
-    const saveSettingsBtn = document.getElementById('save-settings-btn');
+        // Settings
+        settingsToggle: document.getElementById('settings-toggle'),
+        settingsPanel: document.getElementById('settings-panel'),
+        userIdInput: document.getElementById('user-id-input'),
+        saveSettingsBtn: document.getElementById('save-settings-btn'),
 
-    // Source chips
-    const chips = document.querySelectorAll('.source-chip');
+        // Source Chips
+        chips: document.querySelectorAll('.chip'),
 
-    // Image section elements
-    const imageSection = document.getElementById('image-section');
-    const selectImageBtn = document.getElementById('select-image-btn');
-    const imageInfoCard = document.getElementById('image-info-card');
-    const imagePreview = document.getElementById('image-preview');
-    const imageAltDisplay = document.getElementById('image-alt-display');
-    const imageUrlDisplay = document.getElementById('image-url-display');
-    const clearImageBtn = document.getElementById('clear-image-btn');
-    const pickerBadge = document.getElementById('picker-active-badge');
+        // Image Section
+        imageSection: document.getElementById('image-section'),
+        selectImageBtn: document.getElementById('select-image-btn'),
+        imageInfoCard: document.getElementById('image-info-card'),
+        imagePreview: document.getElementById('image-preview'),
+        clearImageBtn: document.getElementById('clear-image-btn')
+    };
 
     let currentTabData = null;
     let selectedImageUrl = null;
     let pickerActive = false;
-    let selectedType = null;   // currently selected source type
+    let selectedType = 'article';
     let savedUserId = '';
 
-    // ─── Settings Logic ──────────────────────────────────────────────────────
-    chrome.storage.local.get(['userId'], (result) => {
+    // --- 1. Initialize Settings & Status ---
+    chrome.storage.local.get(['userId', 'pendingImage'], (result) => {
         if (result.userId) {
             savedUserId = result.userId;
-            userIdInput.value = savedUserId;
+            elements.userIdInput.value = savedUserId;
+        }
+        if (result.pendingImage?.imageUrl) {
+            applyImageData(result.pendingImage.imageUrl);
         }
     });
 
-    settingsToggle.addEventListener('click', () => {
-        settingsPanel.classList.toggle('hidden');
-    });
-
-    saveSettingsBtn.addEventListener('click', () => {
-        const val = userIdInput.value.trim();
-        chrome.storage.local.set({ userId: val }, () => {
-            savedUserId = val;
-            showMessage('Settings saved!', 'success');
-            setTimeout(() => settingsPanel.classList.add('hidden'), 1000);
-        });
-    });
-
-    // ─── Server Status ───────────────────────────────────────────────────────
-    async function checkStatus() {
+    const checkServerStatus = async () => {
         try {
-            const { userId } = await chrome.storage.local.get(['userId']);
-            const res = await fetch('https://genai-1-ilh4.onrender.com/api/items', {
+            const res = await fetch('https://gen-ai-1-testing1234.vercel.app/api/items', {
                 method: 'GET',
-                headers: { 'x-user-id': userId || 'anon' }
+                headers: { 'x-user-id': savedUserId || 'anon' }
             });
-            if (res.ok) {
-                statusIndicator.classList.add('online');
-                statusIndicator.classList.remove('offline');
-            } else {
-                statusIndicator.classList.add('offline');
-                statusIndicator.classList.remove('online');
-            }
+            elements.statusIndicator.style.background = res.ok ? '#4ade80' : '#f87171';
+            elements.statusIndicator.style.boxShadow = res.ok ? '0 0 10px #4ade80' : '0 0 10px #f87171';
         } catch {
-            statusIndicator.classList.add('offline');
-            statusIndicator.classList.remove('online');
+            elements.statusIndicator.style.background = '#f87171';
         }
-    }
+    };
+    checkServerStatus();
 
-    checkStatus();
-
-    // ─── Tab Info + Text Selection ───────────────────────────────────────────
+    // --- 2. Tab Info & Auto-detection ---
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
     if (tab) {
-        pageTitleEl.textContent = tab.title || 'Untitled Page';
-        pageUrlEl.textContent = tab.url || 'No URL';
         currentTabData = { url: tab.url, title: tab.title };
-
-        // Auto-detect type from URL
         autoDetectType(tab.url);
 
+        // Get highlighted text automatically
         try {
             const res = await chrome.tabs.sendMessage(tab.id, { action: 'GET_SELECTION' });
-            if (res && res.selectedText) selectionTextEl.value = res.selectedText;
-        } catch {
-            selectionTextEl.placeholder = 'Select text on the page first (or reload the page)';
-        }
+            if (res?.selectedText) elements.selectionText.value = res.selectedText;
+        } catch (e) { console.log("Content script not ready"); }
     }
 
-    // ─── Restore Pending Image from Storage ──────────────────────────────────
-    chrome.storage.local.get(['pendingImage'], (result) => {
-        if (result.pendingImage && result.pendingImage.imageUrl) {
-            applyImageData(result.pendingImage.imageUrl, result.pendingImage.altText || '');
-        }
+    // --- 3. UI Event Listeners ---
+
+    // Toggle Settings
+    elements.settingsToggle.addEventListener('click', () => {
+        elements.settingsPanel.classList.toggle('hidden');
     });
 
-    // ─── Source Type Chip Selection ───────────────────────────────────────────
-    chips.forEach(chip => {
+    // Save Settings
+    elements.saveSettingsBtn.addEventListener('click', () => {
+        const val = elements.userIdInput.value.trim();
+        if (!val) return showMessage('Enter a valid ID', 'error');
+
+        chrome.storage.local.set({ userId: val }, () => {
+            savedUserId = val;
+            showMessage('Identity Verified ✓', 'success');
+            setTimeout(() => elements.settingsPanel.classList.add('hidden'), 1000);
+            checkServerStatus();
+        });
+    });
+
+    // Handle Source Chip Clicks
+    elements.chips.forEach(chip => {
         chip.addEventListener('click', () => {
-            selectType(chip.dataset.type);
+            const type = chip.getAttribute('data-type');
+            updateTypeUI(type);
         });
     });
 
-    function selectType(type) {
-        selectedType = type;
-        const meta = SOURCE_TYPES[type];
-
-        // Update chip UI
-        chips.forEach(c => {
-            c.classList.toggle('active', c.dataset.type === type);
-        });
-
-        // Toggle Field Visibility
-        if (meta && meta.showText) {
-            selectionField.classList.remove('hidden');
-        } else {
-            selectionField.classList.add('hidden');
-        }
-
-        // Show/hide image picker section
-        if (type === 'image') {
-            imageSection.classList.remove('hidden');
-        } else {
-            imageSection.classList.add('hidden');
-            // Cancel picker if active
-            if (pickerActive) disablePicker();
-        }
-
-        // Update textarea placeholder based on type
-        selectionTextEl.placeholder = meta ? meta.hint : 'Select content...';
-    }
-
-    function autoDetectType(url) {
-        if (!url) return;
-        const lowUrl = url.toLowerCase();
-
-        if (lowUrl.includes('youtube.com/watch') || lowUrl.includes('youtu.be/')) {
-            selectType('youtube');
-        } else if (lowUrl.includes('twitter.com') || lowUrl.includes('x.com')) {
-            selectType('tweet');
-        } else if (lowUrl.endsWith('.pdf') || lowUrl.includes('/pdf/') || lowUrl.includes('blob:')) {
-            selectType('pdf');
-        } else {
-            selectType('article');
-        }
-    }
-
-    // ─── Image Picker Button ─────────────────────────────────────────────────
-    selectImageBtn.addEventListener('click', async () => {
-        if (pickerActive) {
-            await disablePicker();
-            return;
-        }
-
-        if (selectedImageUrl) clearImage();
+    // Image Picker Logic
+    elements.selectImageBtn.addEventListener('click', async () => {
+        if (pickerActive) return disablePicker();
 
         pickerActive = true;
-        selectImageBtn.innerHTML = '❌ Cancel Selection';
-        selectImageBtn.classList.add('active');
-        pickerBadge.classList.remove('hidden');
+        elements.selectImageBtn.textContent = 'Selecting... (Click an image)';
+        elements.selectImageBtn.style.borderColor = '#3b82f6';
 
         try {
             await chrome.tabs.sendMessage(tab.id, { action: 'ENABLE_IMAGE_PICKER' });
-        } catch {
-            showMessage('Could not activate picker. Reload the page.', 'error');
-            await disablePicker();
-        }
-    });
-
-    // ─── Clear Image ──────────────────────────────────────────────────────────
-    clearImageBtn.addEventListener('click', clearImage);
-
-    // ─── Receive Image from Content Script ────────────────────────────────────
-    chrome.runtime.onMessage.addListener((msg) => {
-        if (msg.action === 'IMAGE_SELECTED') {
-            applyImageData(msg.imageUrl, msg.altText || '');
-            pickerBadge.classList.add('hidden');
-            pickerActive = false;
-        }
-        if (msg.action === 'IMAGE_PICKER_CANCELLED') {
+        } catch (err) {
+            showMessage('Reload page to use picker', 'error');
             disablePicker();
         }
     });
 
-    // ─── Save Button ──────────────────────────────────────────────────────────
-    saveBtn.addEventListener('click', async () => {
-        const text = selectionTextEl.value.trim();
-        const note = noteInputEl.value.trim();
-        const meta = SOURCE_TYPES[selectedType];
+    elements.clearImageBtn.addEventListener('click', clearImage);
 
+    // Receive Message from Content Script (Image selection)
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.action === 'IMAGE_SELECTED') {
+            applyImageData(msg.imageUrl);
+            pickerActive = false;
+        }
+        if (msg.action === 'IMAGE_PICKER_CANCELLED') disablePicker();
+    });
+
+    // --- 4. Final Save Action ---
+    elements.saveBtn.addEventListener('click', async () => {
         if (!savedUserId) {
-            showMessage('Please enter your User ID in Settings ⚙️ first!', 'error');
-            settingsPanel.classList.remove('hidden');
+            showMessage('Please set User ID in settings', 'error');
+            elements.settingsPanel.classList.remove('hidden');
             return;
         }
 
-        if (!selectedType) {
-            showMessage('Please select a content type first.', 'error');
-            return;
+        const text = elements.selectionText.value.trim();
+        const note = elements.noteInput.value.trim();
+
+        // Validation for Article/Tweet/Image
+        if (SOURCE_TYPES[selectedType].showText && !text && !selectedImageUrl) {
+            return showMessage('Please capture some content', 'error');
         }
 
-        const needsText = meta && meta.showText;
-
-        if (needsText && !text && !selectedImageUrl) {
-            showMessage('Please capture some content or select an image.', 'error');
-            return;
-        }
-
-        const dataToSave = {
+        const payload = {
             ...currentTabData,
             sourceType: selectedType,
             selectedText: text || null,
             note: note || null,
-            timestamp: new Date().toISOString(),
             imageUrl: selectedImageUrl || null,
-            imageAlt: (imageAltDisplay.textContent !== '—') ? imageAltDisplay.textContent : null
+            timestamp: new Date().toISOString()
         };
 
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Saving...';
+        // UI State: Saving
+        elements.saveBtn.disabled = true;
+        elements.saveBtn.innerHTML = '<span>Processing...</span><div class="btn-glow"></div>';
 
         try {
             const response = await fetch(API_ENDPOINT, {
@@ -253,66 +175,77 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'Content-Type': 'application/json',
                     'x-user-id': savedUserId
                 },
-                body: JSON.stringify(dataToSave)
+                body: JSON.stringify(payload)
             });
 
             if (response.ok) {
+                showMessage('Stored in Knowledge OS ✓', 'success');
                 chrome.storage.local.remove('pendingImage');
-                showMessage('Saved successfully! ✓', 'success');
-                saveBtn.textContent = 'Saved!';
-                setTimeout(() => window.close(), 1400);
+                setTimeout(() => window.close(), 1500);
             } else {
-                throw new Error('Server error');
+                throw new Error();
             }
         } catch (error) {
-            console.error('Save error:', error);
-            showMessage('Backend unreachable. Queuing locally...', 'error');
-            chrome.storage.local.get({ offlineQueue: [] }, (result) => {
-                const queue = result.offlineQueue;
-                queue.push(dataToSave);
-                chrome.storage.local.set({ offlineQueue: queue });
-            });
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Queued Locally';
+            showMessage('Connection lost. Try again.', 'error');
+            elements.saveBtn.disabled = false;
+            elements.saveBtn.innerHTML = '<span>Save to Knowledge</span><div class="btn-glow"></div>';
         }
     });
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
-    function applyImageData(imageUrl, altText) {
-        selectedImageUrl = imageUrl;
-        imagePreview.src = imageUrl;
-        imagePreview.alt = altText;
-        imageAltDisplay.textContent = altText || '(no alt text)';
-        imageAltDisplay.title = altText || '';
-        imageUrlDisplay.textContent = imageUrl;
-        imageUrlDisplay.title = imageUrl;
-        imageInfoCard.classList.remove('hidden');
-        selectImageBtn.innerHTML = '<span class="btn-icon">✅</span> Image Selected';
-        selectImageBtn.classList.remove('active');
-        selectImageBtn.classList.add('selected');
+    // --- Helper Functions ---
+
+    function updateTypeUI(type) {
+        selectedType = type;
+        // Update Chips UI
+        elements.chips.forEach(c => {
+            c.classList.toggle('active', c.getAttribute('data-type') === type);
+        });
+
+        // Show/Hide Fields
+        const meta = SOURCE_TYPES[type];
+        elements.selectionField.classList.toggle('hidden', !meta.showText);
+        elements.imageSection.classList.toggle('hidden', type !== 'image');
+
+        if (type === 'youtube') {
+            elements.selectionText.placeholder = "YouTube URL will be captured automatically";
+        } else {
+            elements.selectionText.placeholder = "Capture content from page...";
+        }
     }
 
-    async function disablePicker() {
+    function autoDetectType(url) {
+        const lowUrl = url.toLowerCase();
+        if (lowUrl.includes('youtube.com') || lowUrl.includes('youtu.be')) updateTypeUI('youtube');
+        else if (lowUrl.includes('twitter.com') || lowUrl.includes('x.com')) updateTypeUI('tweet');
+        else updateTypeUI('article');
+    }
+
+    function applyImageData(url) {
+        selectedImageUrl = url;
+        elements.imagePreview.src = url;
+        elements.imageInfoCard.classList.remove('hidden');
+        elements.selectImageBtn.textContent = 'Image Captured ✓';
+        elements.selectImageBtn.style.color = '#4ade80';
+        elements.selectImageBtn.style.borderStyle = 'solid';
+    }
+
+    function disablePicker() {
         pickerActive = false;
-        selectImageBtn.innerHTML = '<span class="btn-icon">🖼️</span> Select Image';
-        selectImageBtn.classList.remove('active');
-        pickerBadge.classList.add('hidden');
-        try { await chrome.tabs.sendMessage(tab.id, { action: 'DISABLE_IMAGE_PICKER' }); } catch { }
+        elements.selectImageBtn.textContent = 'Select Image from Page';
+        elements.selectImageBtn.style.color = '';
+        elements.selectImageBtn.style.borderStyle = 'dashed';
     }
 
     function clearImage() {
         selectedImageUrl = null;
-        imagePreview.src = '';
-        imageAltDisplay.textContent = '—';
-        imageUrlDisplay.textContent = '—';
-        imageInfoCard.classList.add('hidden');
-        selectImageBtn.innerHTML = '<span class="btn-icon">🖼️</span> Select Image';
-        selectImageBtn.classList.remove('selected', 'active');
+        elements.imageInfoCard.classList.add('hidden');
+        disablePicker();
         chrome.storage.local.remove('pendingImage');
     }
 
     function showMessage(msg, type) {
-        messageEl.textContent = msg;
-        messageEl.className = `message ${type}`;
+        elements.message.textContent = msg;
+        elements.message.className = `status-msg ${type}`;
+        setTimeout(() => { elements.message.textContent = ''; }, 3000);
     }
 });

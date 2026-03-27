@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ForceGraph from './ForceGraph';
 import { useGraph } from '@/hooks/useGraph';
 import '@/styles/graph.css';
+import { Search, Sparkles, AlertCircle, Info } from 'lucide-react';
 
 export default function GraphPage() {
   const {
@@ -30,11 +31,11 @@ export default function GraphPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h1>
-          <span className="text-gradient-gold">Knowledge</span> Graph
+        <h1 className="flex items-center justify-center gap-3">
+          <span className="text-[#539AE9]">Knowledge</span> Systems
         </h1>
         <p className="graph-subtitle">
-          Explore semantic relationships from your saved knowledge
+          Explore semantic relationships and neural connections across your entire saved knowledge base.
         </p>
       </motion.header>
 
@@ -47,20 +48,11 @@ export default function GraphPage() {
         transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="graph-search-wrapper">
-          <svg
-            className="graph-search-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <Search className="graph-search-icon" />
           <input
             type="text"
             id="graph-search-input"
-            placeholder="Search your knowledge base…"
+            placeholder="Search your knowledge base..."
             value={query}
             onChange={(e) => handleInputChange(e.target.value)}
             autoFocus
@@ -81,7 +73,7 @@ export default function GraphPage() {
           className="graph-search-btn"
           disabled={loading || !query.trim()}
         >
-          {loading ? 'Searching…' : 'Search'}
+          {loading ? 'Synthesizing...' : 'Visualize'}
         </button>
       </motion.form>
 
@@ -92,7 +84,8 @@ export default function GraphPage() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <span>⚠</span> {error}
+          <AlertCircle className="w-5 h-5" /> 
+          <span>{error}</span>
         </motion.div>
       )}
 
@@ -105,7 +98,7 @@ export default function GraphPage() {
               <div />
               <div />
             </div>
-            <p>Searching vectors…</p>
+            <p className="font-bold tracking-widest text-xs uppercase text-[#539AE9]">Analyzing Neural Vectors...</p>
           </div>
         )}
 
@@ -116,8 +109,11 @@ export default function GraphPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="graph-empty-icon">🔍</div>
-            <p>Type a query to visualize semantic connections</p>
+            <div className="relative">
+               <div className="absolute inset-0 bg-[#539AE9]/20 blur-3xl rounded-full" />
+               <Sparkles className="graph-empty-icon relative z-10 text-[#539AE9]" size={64} />
+            </div>
+            <p className="text-[#A8B3CF] font-medium">Type a query above to visualize semantic connections</p>
           </motion.div>
         )}
 
@@ -131,22 +127,23 @@ export default function GraphPage() {
           >
             <div className="graph-legend">
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-query" /> Query
+                <span className="graph-dot graph-dot-query" /> Neural Seed
               </span>
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-high" /> High Match ≥0.8
+                <span className="graph-dot graph-dot-high" /> High Relevance
               </span>
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-mid" /> Medium ≥0.5
+                <span className="graph-dot graph-dot-mid" /> Correlated
               </span>
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-low" /> Low &lt;0.5
+                <span className="graph-dot graph-dot-low" /> Distant Match
               </span>
             </div>
             <ForceGraph data={graphData} onNodeClick={reQuery} />
-            <p className="graph-hint">
-              💡 Click any result node to re-query • Drag nodes • Scroll to zoom
-            </p>
+            <div className="graph-hint flex items-center justify-center gap-2">
+              <Info className="w-3.5 h-3.5 text-[#539AE9]" />
+              <span>Click nodes to re-query • Drag to reorganize • Scroll to zoom</span>
+            </div>
           </motion.div>
         )}
       </main>

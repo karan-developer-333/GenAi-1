@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
-import { getRelatedTags } from '@/lib/services/AIService';
+import { getRelatedTags } from '@/services/server/AIService';
 
 export async function POST(req: NextRequest) {
   const userId = await getAuthUserId(req);
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     
     const generatedTags = await getRelatedTags(limitedTags);
 
-    const formatedTags = generatedTags.replace("\n"," ").split(" ").filter(tag => tag.trim() !== "");
+    const formatedTags = generatedTags.replace("\n"," ").split(" ").filter((tag: string) => tag.trim() !== "");
 
     // Final limit on generated tags
     const finalTags = formatedTags.slice(0, 15);

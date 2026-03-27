@@ -4,12 +4,12 @@ import { useEffect, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 import { GraphNode, GraphLink, GraphData, ForceGraphProps } from './graph.types';
 
-/* ─── Warm‑theme palette ─── */
+/* ─── Premium AI palette ─── */
 const GROUP_COLORS: Record<number, string> = {
-  1: '#b8860b', // query node — amber gold
-  2: '#7d9a78', // high similarity — sage
-  3: '#5b8bd4', // medium similarity — blue
-  4: '#c9707d', // low similarity — rose
+  1: '#539AE9', // query node — neon blue glow
+  2: '#2655C7', // high similarity — accent blue
+  3: '#153081', // medium similarity — primary blue
+  4: '#4B6C8F', // low similarity — muted blue
 };
 
 export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
@@ -73,7 +73,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', 'rgba(139,115,85,0.35)');
+      .attr('fill', 'rgba(83,154,233,0.3)');
 
     // Tooltip
     const tooltip = d3
@@ -107,7 +107,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .selectAll('line')
       .data(links)
       .join('line')
-      .attr('stroke', 'rgba(139,115,85,0.25)')
+      .attr('stroke', 'rgba(83,154,233,0.15)')
       .attr('stroke-opacity', 0.6)
       .attr('stroke-width', (d) => Math.max(1, d.value * 5))
       .attr('marker-end', 'url(#graph-arrowhead)');
@@ -120,7 +120,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .data(links)
       .join('text')
       .attr('font-size', 10)
-      .attr('fill', 'var(--text-muted)')
+      .attr('fill', 'white')
       .attr('text-anchor', 'middle')
       .text((d) => (d.value ? d.value.toFixed(2) : ''));
 
@@ -147,14 +147,14 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
     node
       .filter((d) => d.group === 1)
       .select('circle')
-      .style('filter', 'drop-shadow(0 0 12px rgba(184,134,11,0.45))');
+      .style('filter', 'drop-shadow(0 0 15px rgba(83,154,233,0.8))');
 
     // Node labels
     node
       .append('text')
       .attr('dy', (d) => (d.group === 1 ? 30 : 24))
       .attr('text-anchor', 'middle')
-      .attr('fill', 'var(--text-primary)')
+      .attr('fill', 'white')
       .attr('font-size', (d) => (d.group === 1 ? 13 : 11))
       .attr('font-weight', (d) => (d.group === 1 ? 700 : 400))
       .text((d) => {
@@ -247,7 +247,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
   }
 
   return (
-    <div ref={wrapperRef} className="graph-vis-wrapper">
+    <div ref={wrapperRef} className="graph-vis-wrapper min-h-80">
       <svg ref={svgRef}></svg>
     </div>
   );

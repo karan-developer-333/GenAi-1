@@ -3,40 +3,41 @@
 import { motion } from 'framer-motion';
 import { heroHeadline, heroSubtext, heroCta, EASE_SMOOTH } from '@/lib/motion';
 import HeroVisual from '@/components/animations/HeroVisual';
+import { ArrowRight, Play, Sparkles } from 'lucide-react';
 
-const BADGE_TEXT = 'AI-Powered Knowledge Management';
+const BADGE_TEXT = 'AI-POWERED KNOWLEDGE SYSTEM';
 
 export default function HeroSection() {
   return (
     <section
       aria-label="Hero"
-      className="relative min-h-screen flex flex-col overflow-hidden bg-[var(--bg-base)]"
+      className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
-      {/* Subtle grid */}
-      <div className="absolute inset-0 bg-grid-light opacity-50 pointer-events-none" />
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-mesh opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-dot-pattern opacity-30 pointer-events-none" />
+      
+      {/* Central Glow Orb (Inspired by Ref) */}
+      <div aria-hidden className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" />
+      
+      {/* Floating Orbs */}
+      <div aria-hidden className="absolute top-[20%] -left-[10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] animate-float pointer-events-none" />
+      <div aria-hidden className="absolute bottom-[10%] -right-[10%] w-[350px] h-[350px] bg-primary/10 rounded-full blur-[80px] animate-float pointer-events-none" style={{ animationDelay: '-3s' }} />
 
-      {/* Ambient warm orbs */}
-      <div aria-hidden className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(212,168,83,0.12) 0%, rgba(212,168,83,0.03) 55%, transparent 75%)', filter: 'blur(30px)' }} />
-      <div aria-hidden className="absolute top-[45%] left-[15%] w-[350px] h-[350px] rounded-full pointer-events-none animate-glow"
-        style={{ background: 'radial-gradient(circle, rgba(201,112,125,0.08) 0%, transparent 70%)', filter: 'blur(55px)' }} />
-      <div aria-hidden className="absolute top-[50%] right-[10%] w-[300px] h-[300px] rounded-full pointer-events-none animate-glow"
-        style={{ background: 'radial-gradient(circle, rgba(125,154,120,0.08) 0%, transparent 70%)', filter: 'blur(50px)', animationDelay: '1.8s' }} />
-
-      {/* ── Text ──────────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto w-full px-4 sm:px-6 pt-32 sm:pt-36 lg:pt-40 pb-8">
-
+      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto px-6 pt-20 pb-16">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 16, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.55, ease: EASE_SMOOTH }}
-          className="mb-7"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: EASE_SMOOTH }}
+          className="mb-8"
         >
-          <span className="badge">
-            <span className="badge-dot" />
-            {BADGE_TEXT}
-          </span>
+          <div className="px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md flex items-center gap-2 shadow-xl shadow-primary/5">
+            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+            <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-primary/80">
+              {BADGE_TEXT}
+            </span>
+          </div>
         </motion.div>
 
         {/* Headline */}
@@ -44,11 +45,14 @@ export default function HeroSection() {
           variants={heroHeadline}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2.4rem,7vw,5.5rem)] font-bold leading-[1.04] tracking-tight"
+          className="text-[clamp(2.5rem,8vw,5.5rem)] font-extrabold leading-[1.05] tracking-tight text-foreground"
         >
-          <span className="text-[var(--text-primary)]">Your Second Brain</span>
+          Talk to <span className="text-primary relative inline-block">
+            Mnemo AI
+            <div className="absolute -bottom-2 left-0 w-full h-1 bg-primary/30 blur-sm rounded-full" />
+          </span>
           <br />
-          <span className="text-gradient-gold">for the Internet.</span>
+          <span className="text-foreground/90">Smarter, Faster, Better</span>
         </motion.h1>
 
         {/* Subtext */}
@@ -56,10 +60,10 @@ export default function HeroSection() {
           variants={heroSubtext}
           initial="hidden"
           animate="visible"
-          className="mt-6 text-base sm:text-lg text-[var(--text-secondary)] max-w-xl leading-relaxed"
+          className="mt-8 text-base sm:text-xl text-muted-foreground max-w-2xl leading-relaxed mx-auto"
         >
-          Save articles, tweets, videos and PDFs. MnemoAI automatically organizes,
-          tags and resurfaces your knowledge with AI-powered semantic search.
+          Your intelligent second brain that automatically organizes, tags, and
+          resurfaces your saved knowledge with semantic search.
         </motion.p>
 
         {/* CTAs */}
@@ -67,68 +71,42 @@ export default function HeroSection() {
           variants={heroCta}
           initial="hidden"
           animate="visible"
-          className="mt-9 flex items-center gap-3 flex-wrap justify-center"
+          className="mt-12 flex flex-col sm:flex-row items-center gap-4 justify-center"
         >
-          <a href="/register" className="btn-primary group">
-            <span>Start for free</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-              className="transition-transform duration-200 group-hover:translate-x-1">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <a
+            href="/sign-up"
+            className="group relative px-8 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2 overflow-hidden"
+          >
+            <span className="relative z-10">Get Started Now</span>
+            <ArrowRight className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </a>
-          <a href="#features" className="btn-secondary">
-            See how it works
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          
+          <a
+            href="#how"
+            className="px-8 py-4 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm text-foreground font-semibold hover:bg-muted/40 transition-all duration-300 flex items-center gap-2"
+          >
+            <Play className="w-4 h-4 fill-foreground/10" />
+            Watch Demo
           </a>
         </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.85, duration: 0.7 }}
-          className="mt-9 flex items-center gap-3 flex-wrap justify-center"
+        {/* Visual Element (inspired by central orb in ref) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 1 }}
+          className="mt-16 relative w-full max-w-4xl mx-auto group"
         >
-          {[
-            { value: '10K+', label: 'Early users' },
-            { value: '4.9',  label: 'Rating', suffix: '★' },
-            { value: '∞',    label: 'Saves' },
-          ].map(({ value, label, suffix }) => (
-            <div key={label} className="stat-card">
-              <div className="flex items-baseline gap-1">
-                <span className="stat-value">{value}</span>
-                {suffix && <span className="text-amber-500 text-base">{suffix}</span>}
-              </div>
-              <span className="stat-label">{label}</span>
-            </div>
-          ))}
+          <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full scale-75 group-hover:scale-100 transition-transform duration-1000" />
+          <div className="relative rounded-3xl border border-white/10 glass-dark p-2 overflow-hidden shadow-2xl">
+            <HeroVisual />
+          </div>
         </motion.div>
       </div>
 
-      {/* ── Full-width SVG visual ──────────────────────────────────────────── */}
-      <div className="relative z-10 w-full px-2 sm:px-6 lg:px-12 mt-4 pb-12">
-        <HeroVisual />
-      </div>
-
-      {/* ── Scroll cue ────────────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest">Scroll</span>
-        <motion.div
-          className="w-px h-8 bg-gradient-to-b from-amber-400/50 to-transparent"
-          animate={{ scaleY: [1, 0.4, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </motion.div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--bg-base)] to-transparent pointer-events-none" />
+      {/* Bottom transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 }

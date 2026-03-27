@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
-import { searchAndBuildGraph } from '@/lib/services/GraphService';
+import { searchAndBuildGraph } from '@/services/server/GraphService';
 
 export async function POST(req: NextRequest) {
   const userId = await getAuthUserId(req);

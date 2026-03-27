@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { searchGraph } from '@/services/graph.service';
+import { searchGraph } from '@/services/client/GraphService';
 import { GraphData } from '@/app/(app)/graph/graph.types';
 
 export const useGraph = () => {

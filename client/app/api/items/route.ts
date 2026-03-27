@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
-import { getAllItems, saveItem } from '@/lib/services/ItemService';
+import { getAllItems, saveItem } from '@/services/server/ItemService';
 
 export async function GET(req: NextRequest) {
   const userId = await getAuthUserId(req);

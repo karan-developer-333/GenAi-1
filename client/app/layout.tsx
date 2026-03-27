@@ -6,6 +6,7 @@ import './globals.css';
 import LenisProvider from '@/components/LenisProvider';
 import ApiAuthHandler from '@/components/ApiAuthHandler';
 import TokenExtractor from '@/components/TokenExtractor';
+import ThemeProvider from '@/components/ThemeProvider';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -42,8 +43,6 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#080810',
-  colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
 };
@@ -57,16 +56,23 @@ export default async function RootLayout({
   const initialToken = await getToken();
 
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
-        <body className="min-h-full flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)] antialiased">
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full`}>
+        <body className="min-h-full flex flex-col bg-background text-foreground antialiased transition-colors duration-300">
         <ClerkProvider> 
-          <TokenExtractor initialToken={initialToken} />
-          <ApiAuthHandler />
-          <LenisProvider>
-            <main className="flex-1">
-              {children}
-            </main>
-          </LenisProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TokenExtractor initialToken={initialToken} />
+            <ApiAuthHandler />
+            <LenisProvider>
+              <main className="flex-1">
+                {children}
+              </main>
+            </LenisProvider>
+          </ThemeProvider>
          </ClerkProvider> 
         </body>
       </html>

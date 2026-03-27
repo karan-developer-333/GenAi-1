@@ -1,5 +1,5 @@
-import dbConnect from '../database';
-import Item, { IItem } from '../models/Item';
+import dbConnect from '../../lib/database';
+import Item from '../../models/Item';
 import { uploadToPinecone, searchPinecone, deleteFromPinecone } from './PineconeService';
 import { generateTags } from './AIService';
 import mongoose from 'mongoose';

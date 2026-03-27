@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
-import { deleteItem } from '@/lib/services/ItemService';
+import { deleteItem } from '@/services/server/ItemService';
 
 export async function DELETE(
   req: NextRequest,

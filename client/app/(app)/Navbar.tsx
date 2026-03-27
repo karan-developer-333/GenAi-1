@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
-import ThemeToggle from '@/components/ThemeToggle';
 import { HiDownload } from 'react-icons/hi';
 
 const NAV_LINKS = [ 
@@ -79,7 +78,6 @@ export default function Navbar() {
               >
                 <HiDownload className="w-5 h-5" />
               </a>
-              <ThemeToggle />
               <SignOutButton>
                 <UserButton
                   // afterSignOutUrl="/"

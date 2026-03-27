@@ -1,10 +1,15 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
+import { getTagsByUserId } from "@/services/server/AiSuggestionService";
 
-import { getAllTags } from "@/services/aiSuggestion.service";
-import {  NextResponse } from "next/server"
+export const GET = async (req: NextRequest) => {
+    const userId = await getAuthUserId(req);
+    if (!userId) return unauthorizedResponse();
 
-export const GET = async () => {
-
-    const tags = await getAllTags();
-    
-    return NextResponse.json({tags})
+    try {
+        const tags = await getTagsByUserId(userId);
+        return NextResponse.json({ tags });
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 }

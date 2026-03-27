@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import ThemeToggle from './ThemeToggle';
+import { Menu, X, ArrowRight, Brain } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Product',      href: '#features' },
   { label: 'How It Works', href: '#how'      },
-  { label: 'Graph',        href: '#graph'    },
-  { label: 'Pricing',      href: '# pricing'  },
+  { label: 'Graph',        href: '/graph'    },
+  { label: 'Pricing',      href: '#pricing'  },
 ];
 
 export default function Navbar() {
@@ -18,7 +18,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -26,90 +26,72 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -80, opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          'fixed top-0 left-0 w-full r right-0 z-50 transition-all duration-500',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4',
           scrolled
-            ? 'glass border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+            ? 'bg-[#010419]/80 backdrop-blur-xl border-b border-[#539AE9]/15 py-3 shadow-[0_8px_32px_rgba(1,4,25,0.8)]'
             : 'bg-transparent'
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[72px]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-9 h-9">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-600 to-yellow-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md" />
-                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-600 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-600/25 group-hover:shadow-yellow-600/40 transition-all duration-300">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="text-white">
-                    <path d="M4 4h10v10H4V4z" stroke="white" strokeWidth="1.5" fill="rgba(255,255,255,0.25)" />
-                    <path d="M2 2h4v4H2V2z" stroke="white" strokeWidth="1.2" fill="rgba(255,255,255,0.15)" />
-                    <path d="M12 12h4v4h-4v-4z" stroke="white" strokeWidth="1.2" fill="rgba(255,255,255,0.15)" />
-                  </svg>
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 bg-[#2655C7]/30 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-br from-[#153081] to-[#2655C7] flex items-center justify-center shadow-lg shadow-[#153081]/20 border border-white/10 transition-transform duration-500 group-hover:scale-105">
+                   <Brain className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <span className="font-bold  text-lg tracking-tight">
-                Mnemo<span className="bg-gradient-to-r from-yellow-400 to-yellow-400 bg-clip-text text-transparent">AI</span>
+              <span className="font-bold text-xl tracking-tight text-white">
+                Mnemo<span className="text-[#539AE9]">AI</span>
               </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1 bg-[#09153C]/40 backdrop-blur-md px-2 py-1.5 rounded-2xl border border-[#539AE9]/10">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-yellow-600 transition-colors duration-200 rounded-lg hover:bg-white/5"
+                  className="px-5 py-2 text-sm font-medium text-[#A8B3CF] hover:text-[#539AE9] transition-all duration-300 rounded-xl hover:bg-[#539AE9]/5"
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
 
-            {/* CTA */}
-            <div className="hidden lg:flex items-center gap-3">
-              <ThemeToggle />
-              <a 
-                href="/collections" 
-                className="text-sm text-[var(--text-secondary)] hover:text-yellow-600 transition-colors duration-200 px-3 py-2 rounded-lg hover:bg-white/5"
+            {/* Actions */}
+            <div className="hidden lg:flex items-center gap-4">
+              <Link 
+                href="/sign-in" 
+                className="text-sm font-medium text-[#A8B3CF] hover:text-white transition-colors px-4 py-2"
               >
                 Sign in
-              </a>
-              <a
-                href="/collections"
-                className="btn-primary group"
+              </Link>
+              <Link
+                href="/sign-up"
+                className="group relative px-6 py-2.5 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-[#539AE9]/30 transition-all duration-300 overflow-hidden flex items-center gap-2 border border-white/10"
               >
-                Get Started
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="transition-transform duration-200 group-hover:translate-x-0.5">
-                  <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
+                <span className="relative z-10">Try it now</span>
+                <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#2655C7] to-[#539AE9] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </Link>
             </div>
 
             {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setOpen(!open)}
-              className="lg:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 rounded-lg hover:bg-white/5 transition-colors"
-              aria-label="Toggle menu"
-            >
-              <motion.span 
-                className="w-5 h-0.5 bg-black block"
-                animate={{ rotate: open ? 45 : 0, y: open ? 3 : 0 }}
-                transition={{ duration: 0.2 }}
-              />
-              {/* <motion.span 
-                className="w-5 h-0.5 bg-white/80 block"
-                animate={{ opacity: open ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-              /> */}
-              <motion.span 
-                className="w-5 h-0.5 bg-black/80 block"
-                animate={{ rotate: open ? -45 : 0, y: open ? -3 : 0 }}
-                transition={{ duration: 0.2 }}
-              />
-            </button>
+            <div className="flex items-center gap-3 lg:hidden">
+              <button
+                onClick={() => setOpen(!open)}
+                className="p-2 rounded-xl bg-[#09153C]/40 border border-[#539AE9]/10 transition-colors text-white"
+                aria-label="Toggle menu"
+              >
+                {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>
@@ -118,33 +100,30 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-0 top-[72px] z-40 glass border-b border-white/5 lg:hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-x-0 top-[88px] z-40 bg-[#010419]/95 backdrop-blur-2xl border-b border-[#539AE9]/10 lg:hidden overflow-hidden"
           >
-            <nav className="flex flex-col p-4 gap-1">
+            <nav className="flex flex-col p-6 gap-2">
               {NAV_LINKS.map((link, i) => (
                 <motion.a
                   key={link.label}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="px-4 py-3 rounded-xl text-[var(--text-secondary)] hover:text-white hover:bg-white/5 transition-all duration-200 text-sm font-medium"
+                  transition={{ delay: i * 0.1 }}
+                  className="px-4 py-4 rounded-2xl text-[#A8B3CF] hover:text-[#539AE9] hover:bg-[#539AE9]/5 transition-all duration-300 text-base font-medium"
                 >
                   {link.label}
                 </motion.a>
               ))}
-              <div className="border-t border-white/5 mt-3 pt-4 flex flex-col gap-3">
-                <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-sm text-[var(--text-secondary)]">Theme</span>
-                  <ThemeToggle />
-                </div>
-                <a href="#" className="px-4 py-3 text-center text-[var(--text-secondary)] hover:text-white rounded-xl hover:bg-white/5 transition-all">Sign in</a>
-                <a href="#" className="btn-primary justify-center">Get Started</a>
+              <div className="h-px bg-[#539AE9]/10 my-4" />
+              <div className="flex flex-col gap-4">
+                <Link href="/sign-in" className="w-full text-center py-4 rounded-2xl text-[#A8B3CF] hover:bg-[#09153C] transition-all">Sign in</Link>
+                <Link href="/sign-up" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Try it free</Link>
               </div>
             </nav>
           </motion.div>
