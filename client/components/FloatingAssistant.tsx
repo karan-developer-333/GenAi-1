@@ -72,14 +72,14 @@ export const FloatingAssistant = () => {
         {/* Main Orb */}
         <motion.div
           className={cn(
-            "relative rounded-full flex items-center justify-center shadow-xl transition-all duration-300",
+            "relative rounded-full flex items-center justify-center shadow-xl transition-all ",
             isOpen 
               ? "bg-gradient-to-br from-red-500/80 to-red-600/80" 
               : "bg-gradient-to-br from-primary to-accent",
             isMobile ? "w-12 h-12" : "w-14 h-14"
           )}
           animate={{ 
-            rotate: isOpen ? 90 : 0,
+            rotate: isOpen ? 45 : 0,
           }}
         >
           {isOpen ? (
@@ -90,7 +90,7 @@ export const FloatingAssistant = () => {
               <motion.div
                 className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-emerald-400 rounded-full border-2 border-background"
                 animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 0.5, repeat: Infinity }}
               />
             </>
           )}
@@ -115,9 +115,9 @@ export const FloatingAssistant = () => {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className={cn(
-              "fixed z-50 flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-border bg-card",
+              "fixed z-50 flex flex-col rounded-lg overflow-hidden shadow-2xl border border-border bg-blue-950",
               isMobile 
-                ? "bottom-20 left-2 right-2 w-auto max-w-none h-[calc(100vh-120px)]" 
+                ? "bottom-20 w-full max-w-none h-[calc(100vh-80px)]" 
                 : "bottom-24 right-6 w-96 max-w-[calc(100vw-48px)] h-[500px] max-h-[calc(100vh-180px)]"
             )}
           >

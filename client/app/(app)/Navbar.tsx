@@ -8,6 +8,7 @@ import { UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { HiDownload } from 'react-icons/hi';
 import { Brain } from 'lucide-react';
+import ExportButton from '@/components/ExportButton';
 
 const NAV_LINKS = [ 
   { label: 'Collections', href: '/collections'},
@@ -75,6 +76,7 @@ export default function Navbar() {
 
             {/* Auth area */}
             <div className="hidden md:flex items-center gap-3">
+              <ExportButton />
               <a
                 href="/extension.zip"
                 download="mnemo-ai-extension.zip"
@@ -150,6 +152,7 @@ export default function Navbar() {
                 );
               })}
               <div className="border-t border-border mt-3 pt-4 flex flex-col gap-3">
+                <ExportButton variant="dropdown" />
                 <div className="flex justify-center">
                   <UserButton />
                 </div>

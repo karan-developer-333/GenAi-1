@@ -3,7 +3,7 @@
  * Modernized for Sandra AI Theme
  */
 
-const API_ENDPOINT = 'http://localhost:3000/api/items/';
+const API_ENDPOINT = 'https://f1rr36mb-3000.inc1.devtunnels.ms/api/items/';
 
 // Source type metadata mapping
 const SOURCE_TYPES = {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const checkServerStatus = async () => {
         try {
-            const res = await fetch('http://localhost:3000/api/items', {
+            const res = await fetch('https://f1rr36mb-3000.inc1.devtunnels.ms/api/items', {
                 method: 'GET',
                 headers: { 'x-user-id': savedUserId || 'anon' }
             });

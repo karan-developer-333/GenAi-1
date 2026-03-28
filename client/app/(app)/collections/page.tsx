@@ -5,6 +5,7 @@ import { StaggerReveal, StaggerItem } from '@/components/animations/ScrollReveal
 import CollectionCard from '@/components/collections/CollectionCard';
 import SearchBar from '@/components/collections/SearchBar';
 import EmptyState from '@/components/collections/EmptyState';
+import { ExportButtonV2 } from '@/components/ExportButtonV2';
 import { useState, useEffect } from 'react';
 import { useCollections, Item } from '@/hooks/useCollections';
 import { BookOpen, Loader2, X, ExternalLink, Globe } from 'lucide-react';
@@ -48,6 +49,21 @@ export default function CollectionsPage() {
               <p className="text-body text-muted-foreground mt-2">
                 {items.length} {items.length === 1 ? 'item' : 'items'} in your knowledge base
               </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <ExportButtonV2 
+                variant="primary" 
+                size="lg"
+                showOptions={true}
+                className="hidden md:flex"
+              />
+              <ExportButtonV2 
+                variant="primary" 
+                size="md"
+                showOptions={true}
+                className="flex md:hidden"
+              />
             </div>
           </div>
         </motion.div>
