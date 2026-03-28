@@ -7,7 +7,7 @@ import SearchBar from '@/components/collections/SearchBar';
 import EmptyState from '@/components/collections/EmptyState';
 import { useState, useEffect } from 'react';
 import { useCollections, Item } from '@/hooks/useCollections';
-import { BookOpen, Search, Filter, Sparkles, Loader2, X, ExternalLink } from 'lucide-react';
+import { BookOpen, Search, Filter, Sparkles, Loader2, X, ExternalLink, Globe } from 'lucide-react';
 
 export default function CollectionsPage() {
   const { items, isLoading, queryItems, deleteItem } = useCollections();
@@ -131,11 +131,32 @@ export default function CollectionsPage() {
                       return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
                     };
                     const embedUrl = selectedItem.url.includes("youtube") ? getYoutubeEmbedUrl(selectedItem.url) : "";
+                    const isPdf = selectedItem.url?.toLowerCase().includes(".pdf");
+                    
+                    const isExternalWebsite = selectedItem.url && 
+                      !selectedItem.imageUrl && 
+                      !embedUrl && 
+                      !isPdf &&
+                      (selectedItem.url.startsWith('http://') || selectedItem.url.startsWith('https://'));
                     
                     if (selectedItem.imageUrl) {
                       return <img src={selectedItem.imageUrl} alt={selectedItem.title} className="w-full h-full object-contain" />;
                     } else if (embedUrl) {
                       return <iframe src={embedUrl} className="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />;
+                    } else if (isPdf) {
+                      const pdfUrl = encodeURIComponent(selectedItem.url);
+                      return <iframe src={`https://docs.google.com/gview?url=${pdfUrl}&embedded=true`} className="w-full h-full border-0 bg-white" title="PDF Preview" loading="lazy" />;
+                    } else if (isExternalWebsite) {
+                      return (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#09153C] to-[#010419] gap-6 p-6">
+                          <Globe className="w-20 h-20 text-[#4B6C8F]" />
+                          <p className="text-[#4B6C8F] text-center text-sm">This website cannot be previewed in iframe</p>
+                          <a href={selectedItem.url} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-[#2655C7] text-white rounded-lg font-medium flex items-center gap-2 hover:bg-[#1a3fa0] transition-colors">
+                            <ExternalLink className="w-4 h-4" />
+                            Open in New Tab
+                          </a>
+                        </div>
+                      );
                     } else {
                       return <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#09153C] to-[#010419] gap-4"><BookOpen className="w-20 h-20 text-[#4B6C8F]" /><p className="text-[#4B6C8F] font-bold tracking-widest uppercase text-xs">No media preview</p></div>;
                     }

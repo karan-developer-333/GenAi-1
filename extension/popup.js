@@ -3,7 +3,7 @@
  * Modernized for Sandra AI Theme
  */
 
-const API_ENDPOINT = 'https://gen-ai-1-testing1234.vercel.app/api/items/save';
+const API_ENDPOINT = 'http://localhost:3000/api/items/';
 
 // Source type metadata mapping
 const SOURCE_TYPES = {
@@ -11,6 +11,7 @@ const SOURCE_TYPES = {
     tweet: { label: 'Tweet', showText: true },
     image: { label: 'Image', showText: true },
     youtube: { label: 'YouTube', showText: false },
+    pdf: { label: 'PDF', showText: false },
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -37,7 +38,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectImageBtn: document.getElementById('select-image-btn'),
         imageInfoCard: document.getElementById('image-info-card'),
         imagePreview: document.getElementById('image-preview'),
-        clearImageBtn: document.getElementById('clear-image-btn')
+        clearImageBtn: document.getElementById('clear-image-btn'),
+
+        // PDF Section
+        pdfSection: document.getElementById('pdf-section'),
+        pdfUrlPreview: document.getElementById('pdf-url-preview'),
+        pdfName: document.getElementById('pdf-name')
     };
 
     let currentTabData = null;
@@ -59,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const checkServerStatus = async () => {
         try {
-            const res = await fetch('https://gen-ai-1-testing1234.vercel.app/api/items', {
+            const res = await fetch('http://localhost:3000/api/items', {
                 method: 'GET',
                 headers: { 'x-user-id': savedUserId || 'anon' }
             });
@@ -151,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const note = elements.noteInput.value.trim();
 
         // Validation for Article/Tweet/Image
-        if (SOURCE_TYPES[selectedType].showText && !text && !selectedImageUrl) {
+        if (selectedType !== 'pdf' && SOURCE_TYPES[selectedType].showText && !text && !selectedImageUrl) {
             return showMessage('Please capture some content', 'error');
         }
 
@@ -194,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Helper Functions ---
 
-    function updateTypeUI(type) {
+    function updateTypeUI(type, isAutoDetected = false) {
         selectedType = type;
         // Update Chips UI
         elements.chips.forEach(c => {
@@ -205,11 +211,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const meta = SOURCE_TYPES[type];
         elements.selectionField.classList.toggle('hidden', !meta.showText);
         elements.imageSection.classList.toggle('hidden', type !== 'image');
+        elements.pdfSection.classList.toggle('hidden', type !== 'pdf');
 
         if (type === 'youtube') {
             elements.selectionText.placeholder = "YouTube URL will be captured automatically";
         } else {
             elements.selectionText.placeholder = "Capture content from page...";
+        }
+
+        // Auto-detected message for PDF
+        if (type === 'pdf' && isAutoDetected) {
+            const fileName = currentTabData.url.split('/').pop() || 'PDF Document';
+            elements.pdfName.textContent = fileName;
         }
     }
 
@@ -217,6 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const lowUrl = url.toLowerCase();
         if (lowUrl.includes('youtube.com') || lowUrl.includes('youtu.be')) updateTypeUI('youtube');
         else if (lowUrl.includes('twitter.com') || lowUrl.includes('x.com')) updateTypeUI('tweet');
+        else if (lowUrl.endsWith('.pdf') || /\.pdf(?:\?|$)/i.test(url)) updateTypeUI('pdf', true);
         else updateTypeUI('article');
     }
 

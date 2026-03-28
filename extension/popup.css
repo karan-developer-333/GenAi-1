@@ -219,6 +219,33 @@ textarea:focus, input[type="text"]:focus {
     cursor: pointer;
 }
 
+/* PDF Section */
+.pdf-section { margin-top: 10px; }
+
+.pdf-detected-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 12px;
+    padding: 14px;
+    color: #4ade80;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pdf-url-preview {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-dim);
+    word-break: break-all;
+}
+
 /* Hidden Classes */
 .hidden { display: none !important; }
 
