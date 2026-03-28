@@ -146,8 +146,9 @@ export async function chatStream(
         }
 
         if (delta.content && !isToolPhase) {
-          finalResponse += delta.content;
-          callbacks.onChunk(delta.content);
+          const contentStr = typeof delta.content === 'string' ? delta.content : JSON.stringify(delta.content);
+          finalResponse += contentStr;
+          callbacks.onChunk(contentStr);
         }
       }
 
