@@ -6,12 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Menu, X, ArrowRight, Brain } from 'lucide-react';
 
-const NAV_LINKS = [
-  { label: 'Product',      href: '#features' },
-  { label: 'How It Works', href: '#how'      },
-  { label: 'Graph',        href: '/graph'    },
-  { label: 'Pricing',      href: '#pricing'  },
-];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,19 +44,6 @@ export default function Navbar() {
                 Mnemo<span className="text-[#539AE9]">AI</span>
               </span>
             </Link>
-
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1 bg-[#09153C]/40 backdrop-blur-md px-2 py-1.5 rounded-2xl border border-[#539AE9]/10">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="px-5 py-2 text-sm font-medium text-[#A8B3CF] hover:text-[#539AE9] transition-all duration-300 rounded-xl hover:bg-[#539AE9]/5"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
 
             {/* Actions */}
             <div className="hidden lg:flex items-center gap-4">
@@ -107,19 +88,7 @@ export default function Navbar() {
             className="fixed inset-x-0 top-[88px] z-40 bg-[#010419]/95 backdrop-blur-2xl border-b border-[#539AE9]/10 lg:hidden overflow-hidden"
           >
             <nav className="flex flex-col p-6 gap-2">
-              {NAV_LINKS.map((link, i) => (
-                <motion.a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="px-4 py-4 rounded-2xl text-[#A8B3CF] hover:text-[#539AE9] hover:bg-[#539AE9]/5 transition-all duration-300 text-base font-medium"
-                >
-                  {link.label}
-                </motion.a>
-              ))}
+              
               <div className="h-px bg-[#539AE9]/10 my-4" />
               <div className="flex flex-col gap-4">
                 <Link href="/sign-in" className="w-full text-center py-4 rounded-2xl text-[#A8B3CF] hover:bg-[#09153C] transition-all">Sign in</Link>

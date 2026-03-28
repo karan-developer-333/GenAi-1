@@ -104,7 +104,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#539AE9]">Clerk Protocol ID</label>
-                    <div className="font-mono text-sm font-bold text-white/90 bg-[#09153C]/80 px-4 py-2.5 rounded-xl border border-[#539AE9]/20 shadow-inner block overflow-x-auto whitespace-nowrap scrollbar-hide" data-lenis-prevent="true">
+                    <div className="font-mono text-sm font-bold text-white/90 bg-[#09153C]/80 px-4 py-2.5 rounded-xl border border-[#539AE9]/20 shadow-inner block overflow-x-auto whitespace-nowrap scrollbar-hide">
                       {user?.id}
                     </div>
                   </div>

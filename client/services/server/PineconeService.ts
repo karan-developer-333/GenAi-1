@@ -133,8 +133,6 @@ export const searchPinecone = async (queryObject: { query: string; userId: strin
         }))
       }
     };
-
-    console.log("[PINECONE] Data searched successfully!", transformedResult);
     return transformedResult;
   } catch (error: any) {
     console.error("[PINECONE ERROR] Search failed:", error.message);

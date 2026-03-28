@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import './globals.css';
-import LenisProvider from '@/components/LenisProvider';
+
 import ApiAuthHandler from '@/components/ApiAuthHandler';
 import TokenExtractor from '@/components/TokenExtractor';
 import ThemeProvider from '@/components/ThemeProvider';
@@ -17,9 +17,6 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'MnemoAI — Your Second Brain for the Internet',
-  icons:{
-    icon:"/icon.png",
-  },
   description:
     'Save articles, tweets, videos and PDFs. MnemoAI automatically organizes, tags and resurfaces your saved knowledge with AI-powered semantic search and graph visualization.',
   keywords: ['AI knowledge management', 'personal knowledge base', 'semantic search', 'second brain', 'AI bookmarks'],
@@ -67,11 +64,9 @@ export default async function RootLayout({
           >
             <TokenExtractor initialToken={initialToken} />
             <ApiAuthHandler />
-            <LenisProvider>
-              <main className="flex-1">
-                {children}
-              </main>
-            </LenisProvider>
+            <main className="flex-1">
+              {children}
+            </main>
           </ThemeProvider>
          </ClerkProvider> 
         </body>

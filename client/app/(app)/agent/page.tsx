@@ -28,33 +28,11 @@ export default function AgentPage() {
       <div className="absolute top-[10%] left-[10%] w-[500px] h-[500px] bg-[#539AE9]/10 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" />
       <div className="absolute bottom-[20%] right-[5%] w-[400px] h-[400px] bg-[#153081]/15 rounded-full blur-[100px] animate-assistant-glow pointer-events-none" />
 
-      {/* Header Area */}
-      <header className="flex-shrink-0 px-8 py-5 border-b border-[#539AE9]/15 bg-[#09153C]/40 backdrop-blur-xl z-10">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#153081] to-[#2655C7] flex items-center justify-center text-white shadow-[0_0_20px_rgba(38,85,199,0.3)] border border-white/10">
-              <Brain className="w-6 h-6 animate-pulse" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-white">Mnemo Agent</h1>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                <p className="text-[10px] text-[#A8B3CF] font-bold uppercase tracking-[0.1em]">Neural Core Active</p>
-              </div>
-            </div>
-          </div>
-          <div className="hidden sm:flex items-center gap-4">
-             <div className="px-3 py-1.5 rounded-xl bg-[#539AE9]/5 border border-[#539AE9]/15 text-[#539AE9] text-[10px] font-bold uppercase tracking-widest">
-                Knowledge Synthesis Mode
-             </div>
-          </div>
-        </div>
-      </header>
+      
 
       <main 
         ref={scrollRef}
         className="flex-grow overflow-y-auto px-6 py-10 space-y-8 scroll-smooth scrollbar-hide"
-        data-lenis-prevent="true"
       >
         <div className="max-w-4xl mx-auto space-y-10">
           {messages.length === 0 && (
@@ -63,12 +41,6 @@ export default function AgentPage() {
               animate={{ opacity: 1, y: 0 }}
               className="py-12 text-center"
             >
-              <div className="mb-8 relative inline-block">
-                <div className="absolute inset-0 bg-[#2655C7]/20 rounded-full blur-3xl" />
-                <div className="relative w-24 h-24 mx-auto rounded-[32px] bg-[#09153C]/60 border border-[#539AE9]/20 backdrop-blur-md flex items-center justify-center text-[#539AE9] shadow-2xl">
-                  <Sparkles size={48} className="animate-pulse" />
-                </div>
-              </div>
               
               <div className="space-y-4 mb-12">
                 <h2 className="text-4xl font-extrabold text-white tracking-tight">How can I assist your <span className="text-[#539AE9]">research</span> today?</h2>

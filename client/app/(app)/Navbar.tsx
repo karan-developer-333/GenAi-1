@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: 'AI Suggestions', href: '/ai-suggestions' },
   { label: 'AI Agent', href: '/agent' },
   { label: 'Settings', href: '/settings' },
+  { label: 'Setup', href: '/setup' },
 ];
 
 export default function Navbar() {

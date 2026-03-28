@@ -102,7 +102,7 @@ export async function chat(query: string, userId: string, conversationId?: strin
   let finalResponse = "";
 
   try {
-    console.log("API MESSAGES :",apiMessages)
+    // console.log("API MESSAGES :",apiMessages)
     let response = await client.chat.complete({
       model: 'mistral-small-latest',
       messages: apiMessages,
@@ -116,9 +116,10 @@ export async function chat(query: string, userId: string, conversationId?: strin
       
       // Save the assistant's request to call tools
       const toolCalls = assistantMsg.toolCalls;
+      console.log("TOOL CALLS :",assistantMsg)
       const assistantHistoryMsg: IMessage = {
         role: 'assistant',
-        content: typeof assistantMsg.content === 'string' ? assistantMsg.content : (assistantMsg.content ? JSON.stringify(assistantMsg.content) : "tool called"),
+        content: typeof assistantMsg.content === 'string' ? (assistantMsg.content || "tool called") : (assistantMsg.content ? JSON.stringify(assistantMsg.content) : "tool called"),
         tool_calls: toolCalls || undefined,
       };
       
@@ -147,7 +148,7 @@ export async function chat(query: string, userId: string, conversationId?: strin
       }
 
       // Get new response from Mistral after providing tool results
-      console.log("API MESSAGES 2 :",apiMessages)
+      // console.log("API MESSAGES 2 :",apiMessages)
       response = await client.chat.complete({
         model: 'mistral-small-latest',
         messages: apiMessages,
