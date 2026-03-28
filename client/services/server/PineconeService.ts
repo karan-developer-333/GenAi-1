@@ -6,6 +6,8 @@ import { pipeline, env } from '@xenova/transformers';
 env.backends.onnx.wasm.numThreads = 1;
 env.backends.onnx.useGPU = false;
 env.allowLocalModels = false;
+env.useBrowserCache = false;
+env.backends.onnx.wasm.proxy = false;
 
 let embedder: any;
 
