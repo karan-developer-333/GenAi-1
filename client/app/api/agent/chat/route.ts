@@ -1,3 +1,12 @@
+// ✅ 1. Node runtime force karo
+export const runtime = "nodejs";
+
+// ✅ 2. transformers env config (TOP pe)
+import { env } from "@xenova/transformers";
+
+env.backends.onnx.wasm.numThreads = 1;
+env.backends.onnx.useGPU = false;
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
 import { chatStream } from '@/services/server/AgentService';
