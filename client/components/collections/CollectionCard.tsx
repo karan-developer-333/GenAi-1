@@ -3,8 +3,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { GoArrowUpRight } from 'react-icons/go';
-import { Trash2, ExternalLink, Play, FileText } from 'lucide-react';
+import { Trash2, ExternalLink, FileText } from 'lucide-react';
 
 interface Item {
   _id: string;
@@ -46,24 +45,18 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
     <motion.div
       onClick={onClick}
       className={cn(
-        'group relative cursor-pointer overflow-hidden rounded-2xl flex flex-col min-h-[400px] max-h-[400px]',
-        'bg-[#09153C]/40 backdrop-blur-md border border-[#539AE9]/10',
-        'transition-all duration-500 ease-out',
-        'hover:border-[#539AE9]/30 hover:shadow-[0_8px_32px_rgba(83,154,233,0.1)]',
-        'hover:-translate-y-2'
+        'group relative cursor-pointer overflow-hidden rounded-2xl flex flex-col min-h-[380px]',
+        'card card-hover'
       )}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
     >
-      {/* Background Glow */}
-      <div className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-[80px] rounded-full bg-[#2655C7] group-hover:opacity-20 transition-opacity duration-700" />
-
       {/* Image Section */}
-      <div className="relative h-44 overflow-hidden bg-[#010419]/50">
+      <div className="relative h-44 overflow-hidden bg-muted shrink-0">
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
             alt={item.imageAlt || item.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : embedUrl ? (
           <iframe
@@ -73,15 +66,15 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             allowFullScreen
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#09153C] to-[#010419]">
-             <FileText className="w-10 h-10 text-[#4B6C8F]" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-background">
+            <FileText className="w-10 h-10 text-muted-foreground" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010419]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
         
-        {/* Source Type Badge */}
+        {/* Type Badge */}
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full text-tiny font-bold uppercase tracking-widest bg-[#2655C7] text-white border border-white/10 shadow-lg">
+          <span className="badge badge-primary text-xs">
             {item.type}
           </span>
         </div>
@@ -92,7 +85,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             e.stopPropagation();
             onDelete();
           }}
-          className="absolute top-4 right-4 opacity-100 md:opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-white/20 md:bg-white/10 backdrop-blur-md text-red-400 hover:text-red-500 hover:bg-white/20 transition-all border border-white/10 shadow-lg"
+          className="absolute top-4 right-4 opacity-0 md:opacity-0 group-hover:md:opacity-100 p-2 rounded-lg bg-muted/80 backdrop-blur-sm text-destructive hover:bg-destructive/10 transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -100,26 +93,26 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
         </motion.button>
       </div>
 
-      <div className="relative z-10 flex flex-col flex-grow p-5">
-        {/* TITLE */}
-        <h3 className="text-h4 text-white mb-2 group-hover:text-[#539AE9] transition-colors duration-300 line-clamp-2">
+      <div className="p-5 flex flex-col flex-grow">
+        {/* Title */}
+        <h3 className="text-h5 text-foreground mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-2">
           {item.title}
         </h3>
 
-        {/* DESCRIPTION */}
+        {/* Description */}
         {item.text && (
-          <p className="text-body-sm text-[#A8B3CF] mb-4 line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
+          <p className="text-body-sm text-muted-foreground mb-4 line-clamp-2">
             {item.text}
           </p>
         )}
 
-        {/* TAGS */}
+        {/* Tags */}
         {item.tags && (
-          <div className="flex flex-wrap gap-2 mb-4 overflow-hidden">
+          <div className="flex flex-wrap gap-2 mb-4">
             {item.tags.split(" ").slice(0, 3).map((tag: string, index: number) => (
               <span
                 key={index}
-                className="px-2.5 py-1 rounded-full text-tiny font-bold uppercase tracking-wider glass-tag"
+                className="glass-tag px-2.5 py-1 text-xs font-medium rounded-full"
               >
                 {tag}
               </span>
@@ -127,33 +120,24 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
           </div>
         )}
 
-        {/* FOOTER */}
-        <div className="pt-4 mt-auto border-t border-[#539AE9]/10 flex items-center justify-between text-tiny tracking-wide text-[#4B6C8F]">
-          <div className="flex items-center gap-2 truncate">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#539AE9] shadow-[0_0_8px_rgba(83,154,233,0.8)]" />
-            <span className="truncate">{formattedDate}</span>
-          </div>
+        {/* Footer */}
+        <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            {formattedDate}
+          </span>
 
           <a
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 font-bold text-[#539AE9] bg-[#539AE9]/10 md:bg-transparent px-3 py-1.5 md:p-0 rounded-lg md:rounded-none md:hover:text-white transition-all hover:translate-x-0.5"
+            className="flex items-center gap-1.5 text-sm font-medium text-accent hover:text-primary transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
-            OPEN
+            Open
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
       </div>
-
-      {/* Hover accent glow line */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#539AE9] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-        initial={{ scaleX: 0 }}
-        whileHover={{ scaleX: 1 }}
-        transition={{ duration: 0.5 }}
-      />
     </motion.div>
   );
 }

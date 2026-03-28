@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { heroHeadline, heroSubtext, heroCta, EASE_SMOOTH } from '@/lib/motion';
+import Link from 'next/link';
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
 
-const BADGE_TEXT = 'AI-POWERED KNOWLEDGE SYSTEM';
+const BADGE_TEXT = 'AI-Powered Knowledge Management';
 
 export default function HeroSection() {
   return (
@@ -13,17 +14,17 @@ export default function HeroSection() {
       className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden bg-background pt-20"
     >
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-mesh opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-ai-mesh opacity-40 pointer-events-none" />
       <div className="absolute inset-0 bg-dot-pattern opacity-30 pointer-events-none" />
       
-      {/* Central Glow Orb (Inspired by Ref) */}
-      <div aria-hidden className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" />
+      {/* Central Glow Orb */}
+      <div aria-hidden className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] animate-assistant-glow pointer-events-none" />
       
       {/* Floating Orbs */}
-      <div aria-hidden className="absolute top-[20%] -left-[10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] animate-float pointer-events-none" />
-      <div aria-hidden className="absolute bottom-[10%] -right-[10%] w-[350px] h-[350px] bg-primary/10 rounded-full blur-[80px] animate-float pointer-events-none" style={{ animationDelay: '-3s' }} />
+      <div aria-hidden className="absolute top-[20%] -left-[10%] w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] animate-ai-float pointer-events-none" />
+      <div aria-hidden className="absolute bottom-[10%] -right-[10%] w-[350px] h-[350px] bg-primary/10 rounded-full blur-[80px] animate-ai-float pointer-events-none" style={{ animationDelay: '-3s' }} />
 
-      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto px-6 pt-20 pb-16">
+      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto px-6 pt-20 pb-16">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -31,11 +32,9 @@ export default function HeroSection() {
           transition={{ duration: 0.8, ease: EASE_SMOOTH }}
           className="mb-8"
         >
-          <div className="px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md flex items-center gap-2 shadow-xl shadow-primary/5">
-            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span className="text-tiny font-bold tracking-[0.2em] uppercase text-primary/80">
-              {BADGE_TEXT}
-            </span>
+          <div className="badge badge-primary backdrop-blur-md shadow-lg">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{BADGE_TEXT}</span>
           </div>
         </motion.div>
 
@@ -44,14 +43,13 @@ export default function HeroSection() {
           variants={heroHeadline}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2.5rem,8vw,5.5rem)] font-heading font-extrabold leading-[1.05] tracking-tight text-foreground"
+          className="text-hero text-foreground"
         >
-          Talk to <span className="text-primary relative inline-block">
-            Mnemo AI
+          Your Second Brain for{' '}
+          <span className="text-primary relative">
+            the Internet
             <div className="absolute -bottom-2 left-0 w-full h-1 bg-primary/30 blur-sm rounded-full" />
           </span>
-          <br />
-          <span className="text-foreground/90">Smarter, Faster, Better</span>
         </motion.h1>
 
         {/* Subtext */}
@@ -59,10 +57,10 @@ export default function HeroSection() {
           variants={heroSubtext}
           initial="hidden"
           animate="visible"
-          className="mt-8 text-body-lg sm:text-body-lg text-muted-foreground max-w-2xl leading-relaxed mx-auto"
+          className="mt-8 text-body-lg text-muted-foreground max-w-xl mx-auto"
         >
-          Your intelligent second brain that automatically organizes, tags, and
-          resurfaces your saved knowledge with semantic search.
+          Save articles, tweets, videos, and PDFs. MnemoAI automatically organizes, 
+          tags, and surfaces exactly what you need — when you need it.
         </motion.p>
 
         {/* CTAs */}
@@ -72,22 +70,38 @@ export default function HeroSection() {
           animate="visible"
           className="mt-12 flex flex-col sm:flex-row items-center gap-4 justify-center"
         >
-          <a
-            href="/settings"
-            className="group relative px-8 py-4 bg-primary text-white text-btn rounded-xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2 overflow-hidden"
+          <Link
+            href="/sign-up"
+            className="btn btn-primary px-8 py-4 shadow-xl shadow-primary/25"
           >
-            <span className="relative z-10">Get Started Now</span>
-            <ArrowRight className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </a>
+            <span>Start Free Trial</span>
+            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </Link>
           
           <a
-            href="#how"
-            className="px-8 py-4 rounded-xl border border-border bg-muted/20 backdrop-blur-sm text-foreground text-btn hover:bg-muted/40 transition-all duration-300 flex items-center gap-2"
+            href="#features"
+            className="btn btn-secondary px-8 py-4"
           >
-            <Play className="w-4 h-4 fill-foreground/10" />
+            <Play className="w-4 h-4 fill-current" />
             Watch Demo
           </a>
+        </motion.div>
+
+        {/* Social Proof */}
+        <motion.div
+          variants={heroSubtext}
+          initial="hidden"
+          animate="visible"
+          className="mt-16 flex items-center gap-3 text-sm text-muted-foreground"
+        >
+          <div className="flex -space-x-2">
+            {['JD', 'AK', 'SM', 'RL'].map((initials) => (
+              <div key={initials} className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-[10px] font-bold text-white border-2 border-background">
+                {initials}
+              </div>
+            ))}
+          </div>
+          <span>Trusted by <span className="text-foreground font-semibold">2,000+</span> knowledge workers</span>
         </motion.div>
       </div>
 

@@ -1,7 +1,8 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { sendMessage, AgentResponse } from '@/services/client/AgentService';
+'use client';
 
-export interface Message {
+import { useState, useCallback, useRef, useEffect } from 'react';
+
+export interface FloatingMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
@@ -11,8 +12,9 @@ export interface Message {
   };
 }
 
-export const useAgent = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+export const useFloatingAssistant = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<FloatingMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +31,7 @@ export const useAgent = () => {
   const handleSendMessage = useCallback(async (input: string) => {
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = {
+    const userMessage: FloatingMessage = {
       id: Date.now().toString(),
       role: 'user',
       content: input,
@@ -54,46 +56,39 @@ export const useAgent = () => {
       const decoder = new TextDecoder();
 
       if (reader) {
-        setIsLoading(false); // Stop main loader, stream starts
-
-        // Show a temporary "Thinking..." indicator until the first real chunk arrives
+        setIsLoading(false);
         setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: "Thinking..." } : m));
-
+        
         let accumulatedContent = "";
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          // Decode values and split on the SSE payload boundary
           const chunkStr = decoder.decode(value, { stream: true });
           const events = chunkStr.split('\n\n');
-
+          
           for (const ev of events) {
             if (ev.startsWith('data: ')) {
               try {
                 const parsed = JSON.parse(ev.slice(6));
-
+                
                 if (parsed.type === 'sources') {
                   setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, sources: parsed.data } : m));
                 } else if (parsed.type === 'chunk') {
-                  // Accumulate the text locally
                   accumulatedContent += parsed.data;
-                  // Immediately overwrite the whole string, erasing the "Thinking..." loader securely
                   setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: accumulatedContent } : m));
                 } else if (parsed.type === 'error') {
                   console.error("Stream reported error:", parsed.error);
                 }
-              } catch (e) {
-                // Ignore incomplete JSON chunks (rare with \n\n split)
-              }
+              } catch { /* ignore incomplete chunks */ }
             }
           }
         }
       }
     } catch (error) {
       console.error('Agent chat error:', error);
-      setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: "Sorry, I encountered an error processing your request." } : m));
+      setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: "Sorry, I encountered an error." } : m));
     } finally {
       setIsLoading(false);
     }
@@ -103,11 +98,27 @@ export const useAgent = () => {
     setMessages([]);
   }, []);
 
+  const toggleOpen = useCallback(() => {
+    setIsOpen(prev => !prev);
+  }, []);
+
+  const openChat = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const closeChat = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   return {
+    isOpen,
     messages,
     isLoading,
     scrollRef,
     handleSendMessage,
     clearMessages,
+    toggleOpen,
+    openChat,
+    closeChat,
   };
 };

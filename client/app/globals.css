@@ -31,7 +31,7 @@
 }
 
 :root {
-  /* LIGHT THEME (From Guide) */
+  /* LIGHT THEME */
   --background: #F5F8FF;
   --foreground: #09153C;
   
@@ -64,7 +64,7 @@
 }
 
 .dark {
-  /* DARK THEME (From Guide - Reference Style) */
+  /* DARK THEME */
   --background: #010419;
   --foreground: #FFFFFF;
   
@@ -99,83 +99,82 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-[16px] text-foreground font-sans antialiased;
+    @apply bg-background text-base text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
   }
   
   h1 {
-    @apply font-heading text-[40px] font-semibold tracking-tight;
-    line-height: 48px;
+    @apply font-heading text-4xl font-semibold tracking-tight;
+    line-height: 1.15;
   }
   h2 {
-    @apply font-heading text-[32px] font-semibold tracking-tight;
-    line-height: 40px;
+    @apply font-heading text-3xl font-semibold tracking-tight;
+    line-height: 1.25;
   }
   h3 {
-    @apply font-sans text-[24px] font-semibold tracking-tight;
-    line-height: 32px;
+    @apply font-sans text-xl font-semibold tracking-tight;
+    line-height: 1.35;
   }
   h4 {
-    @apply font-sans text-[20px] font-semibold;
-    line-height: 28px;
+    @apply font-sans text-lg font-semibold;
+    line-height: 1.4;
   }
   h5 {
-    @apply font-sans text-[18px] font-medium;
-    line-height: 26px;
+    @apply font-sans text-base font-medium;
+    line-height: 1.5;
   }
   code, pre {
-    @apply font-mono text-[14px];
+    @apply font-mono text-sm;
   }
 }
 
 /* ─────────────────────────────────────────────
    SAAS TYPOGRAPHY UTILITIES
- ───────────────────────────────────────────── */
+  ───────────────────────────────────────────── */
+@utility text-hero {
+  @apply font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.05] tracking-tight;
+}
 @utility text-h1 {
-  @apply font-heading text-[40px] font-semibold leading-[48px] tracking-tight;
+  @apply font-heading text-4xl font-bold leading-[1.15] tracking-tight;
 }
 @utility text-h2 {
-  @apply font-heading text-[32px] font-semibold leading-[40px] tracking-tight;
+  @apply font-heading text-3xl font-semibold leading-[1.25] tracking-tight;
 }
 @utility text-h3 {
-  @apply font-sans text-[24px] font-semibold leading-[32px] tracking-tight;
+  @apply font-sans text-xl font-semibold leading-[1.35] tracking-tight;
 }
 @utility text-h4 {
-  @apply font-sans text-[20px] font-semibold leading-[28px];
+  @apply font-sans text-lg font-semibold leading-[1.4];
 }
 @utility text-h5 {
-  @apply font-sans text-[18px] font-medium leading-[26px];
+  @apply font-sans text-base font-medium leading-[1.5];
 }
 @utility text-body-lg {
-  @apply font-sans text-[18px] font-normal leading-[28px];
+  @apply font-sans text-lg font-normal leading-relaxed;
 }
 @utility text-body {
-  @apply font-sans text-[16px] font-normal leading-[24px];
+  @apply font-sans text-base font-normal leading-relaxed;
 }
 @utility text-body-sm {
-  @apply font-sans text-[14px] font-normal leading-[20px];
+  @apply font-sans text-sm font-normal leading-relaxed;
 }
 @utility text-caption {
-  @apply font-sans text-[13px] font-normal leading-[18px];
-}
-@utility text-tiny {
-  @apply font-sans text-[12px] font-normal leading-[16px];
-}
-@utility text-btn {
-  @apply font-sans text-[14px] font-medium;
+  @apply font-sans text-sm font-medium leading-normal;
 }
 @utility text-label {
-  @apply font-sans text-[14px] font-medium;
+  @apply font-sans text-sm font-semibold uppercase tracking-wider;
+}
+@utility text-tiny {
+  @apply font-sans text-xs font-medium leading-relaxed;
 }
 @utility text-mono {
-  @apply font-mono text-[14px];
+  @apply font-mono text-sm;
 }
 
 /* ─────────────────────────────────────────────
-   PREMIUM AI UTILITIES (Modified for Palette)
- ───────────────────────────────────────────── */
-
+   PREMIUM AI UTILITIES
+  ───────────────────────────────────────────── */
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px) saturate(180%);
@@ -192,7 +191,7 @@
   background: rgba(83, 154, 233, 0.1);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(83, 154, 233, 0.2);
-  @apply text-[var(--accent)] transition-all duration-300;
+  @apply text-accent transition-all duration-300;
 }
 
 .glow-primary {
@@ -215,7 +214,7 @@
 
 /* ─────────────────────────────────────────────
    ANIMATIONS & EFFECTS
- ───────────────────────────────────────────── */
+  ───────────────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -244,4 +243,48 @@
 }
 ::-webkit-scrollbar-thumb:hover { 
   background: rgba(83, 154, 233, 0.4); 
+}
+
+/* ─────────────────────────────────────────────
+   SHARED COMPONENT STYLES
+  ───────────────────────────────────────────── */
+
+/* Card base styles */
+.card {
+  @apply bg-card/50 backdrop-blur-sm border border-border rounded-2xl;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:border-primary/30 hover:-translate-y-1 hover:shadow-lg;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+}
+
+.badge-primary {
+  @apply bg-primary/10 text-primary border border-primary/20;
+}
+
+/* Button styles */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-300;
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-[0.98];
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground border border-border hover:border-primary/30;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-foreground hover:bg-muted/50;
+}
+
+/* Input styles */
+.input {
+  @apply w-full px-4 py-3 rounded-xl bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300;
 }

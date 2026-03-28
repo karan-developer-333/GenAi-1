@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Navbar from './Navbar';
+import { FloatingAssistant } from '@/components/FloatingAssistant';
 
 
 export const metadata: Metadata = {
@@ -40,11 +41,12 @@ export default function RootLayout({
 }>) {
   return (
       <div className="min-h-screen flex flex-col bg-[var(--bg-cream)] text-[var(--text-primary)] antialiased">
-
+              
                 <Navbar  />
           <main className="flex-1 mt-12 relative">
             {children}
           </main>
+          <FloatingAssistant />
       </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Brain } from 'lucide-react';
 
 const FOOTER_LINKS = {
   Product: ['Features', 'Knowledge Graph', 'Browser Extension', 'API', 'Changelog'],
@@ -33,29 +34,22 @@ export default function Footer() {
   return (
     <footer
       aria-label="Site footer"
-      className="relative bg-[var(--bg-warm)] border-t border-[var(--border-cream)]"
+      className="relative bg-[#010419] border-t border-border"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
         {/* Top row */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-5 group">
-              <div className="relative w-9 h-9">
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--amber-primary)] to-[var(--amber-light)] rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md" />
-                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--amber-primary)] to-[var(--amber-light)] flex items-center justify-center shadow-lg shadow-amber-500/20">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M4 4h10v10H4V4z" stroke="white" strokeWidth="1.5" fill="rgba(255,255,255,0.25)" />
-                    <path d="M2 2h4v4H2V2z" stroke="white" strokeWidth="1.2" fill="rgba(255,255,255,0.15)" />
-                    <path d="M12 12h4v4h-4v-4z" stroke="white" strokeWidth="1.2" fill="rgba(255,255,255,0.15)" />
-                  </svg>
-                </div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#153081] to-[#2655C7] flex items-center justify-center shadow-lg shadow-primary/20">
+                <Brain className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-[var(--text-primary)] text-lg">
-                Mnemo<span className="text-gradient-gold">AI</span>
+              <span className="font-bold text-lg text-foreground">
+                Mnemo<span className="text-accent">AI</span>
               </span>
             </Link>
-            <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-[200px]">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px]">
               Your intelligent second brain for the internet.
             </p>
             {/* Socials */}
@@ -65,7 +59,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--amber-primary)] bg-white hover:bg-amber-50 border border-[var(--border-light)] hover:border-[var(--border-warm)] transition-all duration-200"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-accent hover:bg-accent/10 border border-border hover:border-accent/30 transition-all duration-200"
                 >
                   {icon}
                 </a>
@@ -76,7 +70,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(FOOTER_LINKS).map(([category, links]) => (
             <div key={category}>
-              <p className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-widest mb-5">
+              <p className="text-label text-muted-foreground mb-5">
                 {category}
               </p>
               <ul className="space-y-3">
@@ -84,7 +78,7 @@ export default function Footer() {
                   <li key={link}>
                     <a
                       href="#"
-                      className="text-sm text-[var(--text-muted)] hover:text-[var(--amber-primary)] transition-colors duration-200"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
                     >
                       {link}
                     </a>
@@ -96,13 +90,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="border-t border-[var(--border-cream)] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-[var(--text-muted)]">
-            © {new Date().getFullYear()} MnemoAI Inc. All rights reserved.
+        <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} MnemoAI. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-sm text-[var(--text-muted)]">All systems operational</span>
+            <span className="text-sm text-muted-foreground">All systems operational</span>
           </div>
         </div>
       </div>

@@ -31,11 +31,11 @@ export default function GraphPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h1 className="flex items-center justify-center gap-3">
-          <span className="text-[#539AE9]">Knowledge</span> Systems
+        <h1 className="text-h1 text-foreground flex items-center justify-center gap-3">
+          <span className="text-accent">Knowledge</span> Graph
         </h1>
-        <p className="graph-subtitle">
-          Explore semantic relationships and neural connections across your entire saved knowledge base.
+        <p className="graph-subtitle text-body text-muted-foreground mt-4 max-w-xl mx-auto">
+          Explore how your saved content connects. Search to discover semantic relationships and hidden patterns.
         </p>
       </motion.header>
 
@@ -52,7 +52,7 @@ export default function GraphPage() {
           <input
             type="text"
             id="graph-search-input"
-            placeholder="Search your knowledge base..."
+            placeholder="Ask a question about your knowledge..."
             value={query}
             onChange={(e) => handleInputChange(e.target.value)}
             autoFocus
@@ -73,7 +73,7 @@ export default function GraphPage() {
           className="graph-search-btn"
           disabled={loading || !query.trim()}
         >
-          {loading ? 'Synthesizing...' : 'Visualize'}
+          {loading ? 'Searching...' : 'Explore'}
         </button>
       </motion.form>
 
@@ -98,7 +98,7 @@ export default function GraphPage() {
               <div />
               <div />
             </div>
-            <p className="font-bold tracking-widest text-xs uppercase text-[#539AE9]">Analyzing Neural Vectors...</p>
+            <p className="text-label text-accent mt-6">Analyzing connections...</p>
           </div>
         )}
 
@@ -110,10 +110,10 @@ export default function GraphPage() {
             transition={{ delay: 0.3 }}
           >
             <div className="relative">
-               <div className="absolute inset-0 bg-[#539AE9]/20 blur-3xl rounded-full" />
-               <Sparkles className="graph-empty-icon relative z-10 text-[#539AE9]" size={64} />
+               <div className="absolute inset-0 bg-accent/10 blur-3xl rounded-full" />
+               <Sparkles className="graph-empty-icon relative z-10 text-accent" size={64} />
             </div>
-            <p className="text-[#A8B3CF] font-medium">Type a query above to visualize semantic connections</p>
+            <p className="text-body text-muted-foreground mt-6">Start by searching above to visualize connections</p>
           </motion.div>
         )}
 
@@ -127,22 +127,22 @@ export default function GraphPage() {
           >
             <div className="graph-legend">
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-query" /> Neural Seed
+                <span className="graph-dot graph-dot-query" /> Your Query
               </span>
               <span className="graph-legend-item">
                 <span className="graph-dot graph-dot-high" /> High Relevance
               </span>
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-mid" /> Correlated
+                <span className="graph-dot graph-dot-mid" /> Related
               </span>
               <span className="graph-legend-item">
-                <span className="graph-dot graph-dot-low" /> Distant Match
+                <span className="graph-dot graph-dot-low" /> Mentioned
               </span>
             </div>
             <ForceGraph data={graphData} onNodeClick={reQuery} />
-            <div className="graph-hint flex items-center justify-center gap-2">
-              <Info className="w-3.5 h-3.5 text-[#539AE9]" />
-              <span>Click nodes to re-query • Drag to reorganize • Scroll to zoom</span>
+            <div className="graph-hint flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Info className="w-4 h-4 text-accent" />
+              <span>Click nodes to explore • Drag to move • Scroll to zoom</span>
             </div>
           </motion.div>
         )}
