@@ -37,11 +37,11 @@ export default function CollectionsPage() {
         >
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#539AE9]/5 border border-[#539AE9]/20 text-[#539AE9] text-[10px] font-bold uppercase tracking-[0.2em] shadow-sm backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#539AE9]/5 border border-[#539AE9]/20 text-[#539AE9] text-tiny font-bold uppercase tracking-[0.2em] shadow-sm backdrop-blur-md">
                 <BookOpen className="w-3.5 h-3.5" />
                 All Saves
               </div>
-              <h1 className="text-5xl sm:text-5xl font-extrabold text-white tracking-tight">
+              <h1 className="text-h1 text-white">
                 Knowledge <span className="text-[#539AE9]">Base</span>
               </h1>
             </div>
@@ -73,7 +73,7 @@ export default function CollectionsPage() {
                 <Loader2 className="w-12 h-12 text-[#539AE9] animate-spin" />
                 <div className="absolute inset-0 bg-[#539AE9]/20 blur-xl animate-pulse" />
               </div>
-              <p className="text-[#4B6C8F] font-bold uppercase tracking-[0.2em] text-xs">Accessing Data Clusters...</p>
+              <p className="text-[#4B6C8F] font-bold uppercase tracking-[0.2em] text-tiny">Accessing Data Clusters...</p>
             </motion.div>
           ) : items.length === 0 ? (
             <motion.div
@@ -112,12 +112,12 @@ export default function CollectionsPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative w-full max-w-6xl h-[90vh] md:h-[75vh] bg-[#09153C] border border-[#539AE9]/30 rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl shadow-[#2655C7]/20"
+                className="relative w-full max-w-6xl h-[90vh] md:h-[75vh] bg-[#09153C] border border-[#539AE9]/30 rounded-[1.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl shadow-[#2655C7]/20"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button 
                   onClick={() => setSelectedItem(null)}
-                  className="absolute top-4 right-4 z-50 p-2 rounded-xl bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-md"
+                  className="absolute top-4 right-4 z-50 p-2 rounded-lg bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-md"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -143,25 +143,25 @@ export default function CollectionsPage() {
                 </div>
                 
                 {/* Right side: Content */}
-                <div className="p-6 md:p-8 overflow-y-auto w-full md:w-[45%] flex flex-col bg-gradient-to-b from-[#09153C] to-[#010419]">
+                <div className="p-5 md:p-6 overflow-y-auto w-full md:w-[45%] flex flex-col bg-gradient-to-b from-[#09153C] to-[#010419]">
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#2655C7] text-white shadow-[#2655C7]/20 shadow-lg border border-white/10">
+                    <span className="px-4 py-1.5 rounded-full text-tiny font-bold uppercase tracking-widest bg-[#2655C7] text-white shadow-[#2655C7]/20 shadow-lg border border-white/10">
                       {selectedItem.type}
                     </span>
-                    <span className="text-xs text-[#4B6C8F] font-medium flex items-center gap-1.5">
+                    <span className="text-tiny text-[#4B6C8F] font-medium flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#539AE9] opacity-70" />
                       {new Date(selectedItem.timestamp).toLocaleDateString()}
                     </span>
                   </div>
                   
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4 leading-tight tracking-tight">
+                  <h2 className="text-h2 text-white mb-4">
                     {selectedItem.title}
                   </h2>
                   
                   {selectedItem.text && (
                     <div className="mb-8">
-                      <h4 className="text-[10px] text-[#539AE9] font-black uppercase tracking-[0.2em] mb-2">Extracted Content</h4>
-                      <p className="text-[#A8B3CF] text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                      <h4 className="text-tiny text-[#539AE9] font-black uppercase tracking-[0.2em] mb-2">Extracted Content</h4>
+                      <p className="text-[#A8B3CF] text-body whitespace-pre-wrap">
                         {selectedItem.text}
                       </p>
                     </div>
@@ -170,10 +170,10 @@ export default function CollectionsPage() {
                   <div className="mt-auto pt-6">
                     {selectedItem.tags && (
                       <div className="mb-6">
-                        <h4 className="text-[10px] text-[#539AE9] font-black uppercase tracking-[0.2em] mb-3">Associated Tags</h4>
+                        <h4 className="text-tiny text-[#539AE9] font-black uppercase tracking-[0.2em] mb-3">Associated Tags</h4>
                         <div className="flex flex-wrap gap-2">
                           {selectedItem.tags.split(" ").map((tag: string, index: number) => (
-                            <span key={index} className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-[#539AE9]/10 text-[#539AE9] border border-[#539AE9]/20 hover:bg-[#539AE9]/20 transition-colors cursor-default">
+                            <span key={index} className="px-3 py-1.5 rounded-lg text-tiny font-bold uppercase tracking-wider bg-[#539AE9]/10 text-[#539AE9] border border-[#539AE9]/20 hover:bg-[#539AE9]/20 transition-colors cursor-default">
                               {tag}
                             </span>
                           ))}
@@ -181,7 +181,7 @@ export default function CollectionsPage() {
                       </div>
                     )}
                     
-                    <a href={selectedItem.url} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] hover:shadow-[#539AE9]/30 hover:scale-[1.02] text-white rounded-2xl font-bold transition-all border border-white/10 shadow-xl shadow-blue-900/20">
+                    <a href={selectedItem.url} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-[#153081] to-[#2655C7] hover:shadow-[#539AE9]/30 hover:scale-[1.02] text-white rounded-xl text-btn transition-all border border-white/10 shadow-xl shadow-blue-900/20">
                       Open Original Source
                       <ExternalLink className="w-5 h-5" />
                     </a>

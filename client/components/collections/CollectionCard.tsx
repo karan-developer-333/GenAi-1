@@ -46,7 +46,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
     <motion.div
       onClick={onClick}
       className={cn(
-        'group relative cursor-pointer overflow-hidden rounded-3xl flex flex-col min-h-[420px] max-h-[420px]',
+        'group relative cursor-pointer overflow-hidden rounded-2xl flex flex-col min-h-[400px] max-h-[400px]',
         'bg-[#09153C]/40 backdrop-blur-md border border-[#539AE9]/10',
         'transition-all duration-500 ease-out',
         'hover:border-[#539AE9]/30 hover:shadow-[0_8px_32px_rgba(83,154,233,0.1)]',
@@ -81,7 +81,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
         
         {/* Source Type Badge */}
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#2655C7] text-white border border-white/10 shadow-lg">
+          <span className="px-3 py-1 rounded-full text-tiny font-bold uppercase tracking-widest bg-[#2655C7] text-white border border-white/10 shadow-lg">
             {item.type}
           </span>
         </div>
@@ -92,7 +92,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             e.stopPropagation();
             onDelete();
           }}
-          className="absolute top-4 right-4 opacity-100 md:opacity-0 group-hover:opacity-100 p-2 rounded-xl bg-white/20 md:bg-white/10 backdrop-blur-md text-red-400 hover:text-red-500 hover:bg-white/20 transition-all border border-white/10 shadow-lg"
+          className="absolute top-4 right-4 opacity-100 md:opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-white/20 md:bg-white/10 backdrop-blur-md text-red-400 hover:text-red-500 hover:bg-white/20 transition-all border border-white/10 shadow-lg"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -100,15 +100,15 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
         </motion.button>
       </div>
 
-      <div className="relative z-10 flex flex-col flex-grow p-6">
+      <div className="relative z-10 flex flex-col flex-grow p-5">
         {/* TITLE */}
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#539AE9] transition-colors duration-300 line-clamp-2 leading-tight">
+        <h3 className="text-h4 text-white mb-2 group-hover:text-[#539AE9] transition-colors duration-300 line-clamp-2">
           {item.title}
         </h3>
 
         {/* DESCRIPTION */}
         {item.text && (
-          <p className="text-sm text-[#A8B3CF] mb-4 line-clamp-2 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+          <p className="text-body-sm text-[#A8B3CF] mb-4 line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
             {item.text}
           </p>
         )}
@@ -119,7 +119,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             {item.tags.split(" ").slice(0, 3).map((tag: string, index: number) => (
               <span
                 key={index}
-                className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider glass-tag"
+                className="px-2.5 py-1 rounded-full text-tiny font-bold uppercase tracking-wider glass-tag"
               >
                 {tag}
               </span>
@@ -128,7 +128,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
         )}
 
         {/* FOOTER */}
-        <div className="pt-4 mt-auto border-t border-[#539AE9]/10 flex items-center justify-between text-[11px] font-medium tracking-wide text-[#4B6C8F]">
+        <div className="pt-4 mt-auto border-t border-[#539AE9]/10 flex items-center justify-between text-tiny tracking-wide text-[#4B6C8F]">
           <div className="flex items-center gap-2 truncate">
             <div className="w-1.5 h-1.5 rounded-full bg-[#539AE9] shadow-[0_0_8px_rgba(83,154,233,0.8)]" />
             <span className="truncate">{formattedDate}</span>

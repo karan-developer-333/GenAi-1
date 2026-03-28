@@ -26,6 +26,8 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   --font-sans: var(--font-inter);
+  --font-heading: var(--font-poppins);
+  --font-mono: var(--font-mono);
 }
 
 :root {
@@ -97,9 +99,77 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-[16px] text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    line-height: 1.6;
   }
+  
+  h1 {
+    @apply font-heading text-[40px] font-semibold tracking-tight;
+    line-height: 48px;
+  }
+  h2 {
+    @apply font-heading text-[32px] font-semibold tracking-tight;
+    line-height: 40px;
+  }
+  h3 {
+    @apply font-sans text-[24px] font-semibold tracking-tight;
+    line-height: 32px;
+  }
+  h4 {
+    @apply font-sans text-[20px] font-semibold;
+    line-height: 28px;
+  }
+  h5 {
+    @apply font-sans text-[18px] font-medium;
+    line-height: 26px;
+  }
+  code, pre {
+    @apply font-mono text-[14px];
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SAAS TYPOGRAPHY UTILITIES
+ ───────────────────────────────────────────── */
+@utility text-h1 {
+  @apply font-heading text-[40px] font-semibold leading-[48px] tracking-tight;
+}
+@utility text-h2 {
+  @apply font-heading text-[32px] font-semibold leading-[40px] tracking-tight;
+}
+@utility text-h3 {
+  @apply font-sans text-[24px] font-semibold leading-[32px] tracking-tight;
+}
+@utility text-h4 {
+  @apply font-sans text-[20px] font-semibold leading-[28px];
+}
+@utility text-h5 {
+  @apply font-sans text-[18px] font-medium leading-[26px];
+}
+@utility text-body-lg {
+  @apply font-sans text-[18px] font-normal leading-[28px];
+}
+@utility text-body {
+  @apply font-sans text-[16px] font-normal leading-[24px];
+}
+@utility text-body-sm {
+  @apply font-sans text-[14px] font-normal leading-[20px];
+}
+@utility text-caption {
+  @apply font-sans text-[13px] font-normal leading-[18px];
+}
+@utility text-tiny {
+  @apply font-sans text-[12px] font-normal leading-[16px];
+}
+@utility text-btn {
+  @apply font-sans text-[14px] font-medium;
+}
+@utility text-label {
+  @apply font-sans text-[14px] font-medium;
+}
+@utility text-mono {
+  @apply font-mono text-[14px];
 }
 
 /* ─────────────────────────────────────────────

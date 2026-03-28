@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Poppins, JetBrains_Mono } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import './globals.css';
@@ -13,6 +13,20 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   preload: true,
+});
+
+const poppins = Poppins({
+  variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+  preload: true,
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -53,7 +67,7 @@ export default async function RootLayout({
   const initialToken = await getToken();
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} h-full`}>
         <body className="min-h-full flex flex-col bg-background text-foreground antialiased transition-colors duration-300">
         <ClerkProvider> 
           <ThemeProvider

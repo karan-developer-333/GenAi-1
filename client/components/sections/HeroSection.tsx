@@ -33,7 +33,7 @@ export default function HeroSection() {
         >
           <div className="px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md flex items-center gap-2 shadow-xl shadow-primary/5">
             <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-primary/80">
+            <span className="text-tiny font-bold tracking-[0.2em] uppercase text-primary/80">
               {BADGE_TEXT}
             </span>
           </div>
@@ -44,7 +44,7 @@ export default function HeroSection() {
           variants={heroHeadline}
           initial="hidden"
           animate="visible"
-          className="text-[clamp(2.5rem,8vw,5.5rem)] font-extrabold leading-[1.05] tracking-tight text-foreground"
+          className="text-[clamp(2.5rem,8vw,5.5rem)] font-heading font-extrabold leading-[1.05] tracking-tight text-foreground"
         >
           Talk to <span className="text-primary relative inline-block">
             Mnemo AI
@@ -59,7 +59,7 @@ export default function HeroSection() {
           variants={heroSubtext}
           initial="hidden"
           animate="visible"
-          className="mt-8 text-base sm:text-xl text-muted-foreground max-w-2xl leading-relaxed mx-auto"
+          className="mt-8 text-body-lg sm:text-body-lg text-muted-foreground max-w-2xl leading-relaxed mx-auto"
         >
           Your intelligent second brain that automatically organizes, tags, and
           resurfaces your saved knowledge with semantic search.
@@ -74,7 +74,7 @@ export default function HeroSection() {
         >
           <a
             href="/settings"
-            className="group relative px-8 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2 overflow-hidden"
+            className="group relative px-8 py-4 bg-primary text-white text-btn rounded-xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2 overflow-hidden"
           >
             <span className="relative z-10">Get Started Now</span>
             <ArrowRight className="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
@@ -83,7 +83,7 @@ export default function HeroSection() {
           
           <a
             href="#how"
-            className="px-8 py-4 rounded-2xl border border-border bg-muted/20 backdrop-blur-sm text-foreground font-semibold hover:bg-muted/40 transition-all duration-300 flex items-center gap-2"
+            className="px-8 py-4 rounded-xl border border-border bg-muted/20 backdrop-blur-sm text-foreground text-btn hover:bg-muted/40 transition-all duration-300 flex items-center gap-2"
           >
             <Play className="w-4 h-4 fill-foreground/10" />
             Watch Demo

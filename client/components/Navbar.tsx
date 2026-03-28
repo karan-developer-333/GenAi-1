@@ -42,7 +42,7 @@ export default function Navbar() {
                    <Brain className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <span className="font-bold text-xl tracking-tight text-white">
+              <span className="text-h4 tracking-tight text-white gap-0">
                 Mnemo<span className="text-[#539AE9]">AI</span>
               </span>
             </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-4">
               {(!isLoaded || !isSignedIn) && (
                 <SignInButton>
-                  <button className="text-sm font-medium text-[#A8B3CF] hover:text-white transition-colors px-4 py-2">
+                  <button className="text-btn text-[#A8B3CF] hover:text-white transition-colors px-4 py-2">
                     Sign in
                   </button>
                 </SignInButton>
@@ -68,7 +68,7 @@ export default function Navbar() {
                   />
                   <Link
                     href="/settings"
-                    className="group relative px-6 py-2.5 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-[#539AE9]/30 transition-all duration-300 overflow-hidden flex items-center gap-2 border border-white/10"
+                    className="group relative px-6 py-2.5 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-btn rounded-xl shadow-lg hover:shadow-[#539AE9]/30 transition-all duration-300 overflow-hidden flex items-center gap-2 border border-white/10"
                   >
                     <span className="relative z-10">Dashboard</span>
                     <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
@@ -108,12 +108,12 @@ export default function Navbar() {
               <div className="flex flex-col gap-4">
                 {(!isLoaded || !isSignedIn) && (
                   <>
-                    <Link href="/sign-in" className="w-full text-center py-4 rounded-2xl text-[#A8B3CF] hover:bg-[#09153C] transition-all">Sign in</Link>
-                    <Link href="/sign-up" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Try it free</Link>
+                    <Link href="/sign-in" className="w-full text-center py-4 rounded-xl text-[#A8B3CF] text-btn hover:bg-[#09153C] transition-all">Sign in</Link>
+                    <Link href="/sign-up" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center text-btn rounded-xl shadow-lg">Try it free</Link>
                   </>
                 )}
                 {isSignedIn && (
-                  <Link href="/settings" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Dashboard</Link>
+                  <Link href="/settings" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center text-btn rounded-xl shadow-lg">Dashboard</Link>
                 )}
               </div>
             </nav>
