@@ -1,6 +1,11 @@
 import { Pinecone } from "@pinecone-database/pinecone";
 // @ts-ignore
-import { pipeline } from '@xenova/transformers';
+import { pipeline, env } from '@xenova/transformers';
+
+// Force WASM backend for serverless / Vercel compatibility
+env.backends.onnx.wasm.numThreads = 1;
+env.backends.onnx.useGPU = false;
+env.allowLocalModels = false;
 
 let embedder: any;
 

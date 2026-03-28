@@ -49,9 +49,18 @@ const tools = [
   },
 ];
 
-/* ---------------- CHAT LOGIC ---------------- */
+/* ---------------- CHAT LOGIC (STREAMING) ---------------- */
 
-export async function chat(query: string, userId: string, conversationId?: string) {
+export async function chatStream(
+  query: string,
+  userId: string,
+  conversationId: string | undefined,
+  callbacks: {
+    onSources: (sources: any) => void;
+    onChunk: (text: string) => void;
+    onConversationId: (id: string) => void;
+  }
+) {
   await dbConnect();
   const today = new Date().toDateString();
 
@@ -66,7 +75,10 @@ export async function chat(query: string, userId: string, conversationId?: strin
       title: query.slice(0, 40),
       messages: [],
     });
+    await conversation.save(); // Save early to get ID
   }
+
+  callbacks.onConversationId(conversation._id.toString());
 
   // 2. Build Context (Pinecone + Recent Items)
   const pineconeResults = await searchPinecone({ query, userId });
@@ -74,13 +86,17 @@ export async function chat(query: string, userId: string, conversationId?: strin
 
   const semanticContext = (pineconeResults?.result?.hits || [])
     .map((h: any) => `- ${h.fields?.title}`).join('\n') || 'None';
-  const recentContext = recentItems.map((i) => `- ${i.title}`).join('\n') || 'None';
+  const recentContext = recentItems.map((i: any) => `- ${i.title}`).join('\n') || 'None';
 
   const systemPrompt = `You are MnemoAI. Today is ${today}.\n\nLibrary Context:\n${semanticContext}\n\nRecent Activity:\n${recentContext}`;
 
+  const webSources: any[] = [];
+  callbacks.onSources({
+    knowledge: pineconeResults?.result?.hits?.map((h:any) => ({ title: h.fields?.title, url: h.fields?.url })) || [],
+    web: webSources,
+  });
+
   // 3. Prepare Message History for Mistral
-  // CRITICAL: We only include plain user and assistant messages from history
-  // to prevent role mismatches, while still allowing tools in the current loop.
   const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
 
   for (const m of conversation.messages) {
@@ -97,80 +113,87 @@ export async function chat(query: string, userId: string, conversationId?: strin
   apiMessages.push(userMessage);
   conversation.messages.push(userMessage);
 
-  // 4. Recursive Tool Loop
+  // 4. Recursive Tool Loop with Streaming
   let safetyCounter = 0;
   let finalResponse = "";
 
   try {
-    // console.log("API MESSAGES :",apiMessages)
-    let response = await client.chat.complete({
-      model: 'mistral-small-latest',
-      messages: apiMessages,
-      tools,
-      temperature: 0.3,
-    });
-
-    while (response.choices?.[0]?.message?.toolCalls && safetyCounter < 5) {
+    while (safetyCounter < 5) {
       safetyCounter++;
-      const assistantMsg = response.choices[0].message;
       
-      // Save the assistant's request to call tools
-      const toolCalls = assistantMsg.toolCalls;
-      console.log("TOOL CALLS :",assistantMsg)
-      const assistantHistoryMsg: IMessage = {
-        role: 'assistant',
-        content: typeof assistantMsg.content === 'string' ? (assistantMsg.content || "tool called") : (assistantMsg.content ? JSON.stringify(assistantMsg.content) : "tool called"),
-        tool_calls: toolCalls || undefined,
-      };
-      
-      apiMessages.push(assistantHistoryMsg);
-      // We do NOT save tool-call assistant messages to DB for history
-
-      // Process each tool call
-      for (const tc of (toolCalls || [])) {
-        const args = typeof tc.function.arguments === 'string' 
-          ? JSON.parse(tc.function.arguments) 
-          : tc.function.arguments;
-
-        let resultRaw = "Unknown tool";
-        if (tc.function.name === 'search_web') {
-          const searchRes = await performWebSearch(args.query);
-          resultRaw = searchRes.raw;
-        }
-
-        const toolResponseMsg: IMessage = {
-          role: 'system',
-          content: "WEB SEARCH RESULTS ===> \n" + resultRaw,
-        };
-
-        apiMessages.push(toolResponseMsg);
-        // We do NOT save tool results to DB for history
-      }
-
-      // Get new response from Mistral after providing tool results
-      // console.log("API MESSAGES 2 :",apiMessages)
-      response = await client.chat.complete({
+      const stream = await client.chat.stream({
         model: 'mistral-small-latest',
         messages: apiMessages,
-        tools,
+        tools: tools as any,
         temperature: 0.3,
       });
+
+      let isToolPhase = false;
+      let accToolCalls: Record<number, any> = {};
+
+      for await (const chunk of stream) {
+        const delta = chunk.data?.choices?.[0]?.delta;
+        if (!delta) continue;
+
+        if (delta.toolCalls && delta.toolCalls.length > 0) {
+          isToolPhase = true;
+          for (const tc of delta.toolCalls) {
+            const idx = tc.index || 0;
+            if (!accToolCalls[idx]) accToolCalls[idx] = { id: tc.id, function: { name: "", arguments: "" } };
+            if (tc.function?.name) accToolCalls[idx].function.name = tc.function.name;
+            if (tc.function?.arguments) accToolCalls[idx].function.arguments += tc.function.arguments;
+          }
+        }
+
+        if (delta.content && !isToolPhase) {
+          finalResponse += delta.content;
+          callbacks.onChunk(delta.content);
+        }
+      }
+
+      if (isToolPhase) {
+        const toolCallsArr = Object.values(accToolCalls);
+        apiMessages.push({
+          role: 'assistant',
+          content: "tool called",
+          tool_calls: toolCallsArr as any[]
+        } as IMessage);
+
+        for (const tc of toolCallsArr as any[]) {
+          let args: any = {};
+          try {
+            args = JSON.parse(tc.function.arguments);
+          } catch (e) {
+            console.error("Failed to parse tool args", tc.function.arguments);
+          }
+
+          let resultRaw = "Unknown tool";
+          if (tc.function.name === 'search_web') {
+            const searchRes = await performWebSearch(args.query || "");
+            resultRaw = searchRes.raw;
+            webSources.push({ title: args.query || "Web Search", url: "https://tavily.com" });
+            
+            callbacks.onSources({
+              knowledge: pineconeResults?.result?.hits?.map((h:any) => ({ title: h.fields?.title, url: h.fields?.url })) || [],
+              web: webSources,
+            });
+          }
+
+          apiMessages.push({
+            role: 'system',
+            content: "WEB SEARCH RESULTS ===> \n" + resultRaw,
+          });
+        }
+      } else {
+        break; // Successfully streamed content, end loop
+      }
     }
 
-    let rawContent = response.choices?.[0]?.message?.content;
-    finalResponse = typeof rawContent === 'string' ? rawContent : (rawContent ? JSON.stringify(rawContent) : "");
-    const finalAssistantMsg: IMessage = { role: 'assistant', content: finalResponse };
-    
-    conversation.messages.push(finalAssistantMsg);
+    conversation.messages.push({ role: 'assistant', content: finalResponse } as IMessage);
     await conversation.save();
 
-    return {
-      conversationId: conversation._id,
-      answer: finalResponse,
-    };
-
   } catch (error: any) {
-    console.error("Mistral Chat Error:", error);
-    throw new Error(error.message || "Failed to process chat");
+    console.error("Mistral Stream Error:", error);
+    throw new Error(error.message || "Failed to process chat stream");
   }
 }
