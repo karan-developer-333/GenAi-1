@@ -189,6 +189,7 @@ export async function chatStream(
       }
     }
 
+    
     conversation.messages.push({ role: 'assistant', content: finalResponse } as IMessage);
     await conversation.save();
 

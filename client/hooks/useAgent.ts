@@ -56,26 +56,36 @@ export const useAgent = () => {
       if (reader) {
         setIsLoading(false); // Stop main loader, stream starts
 
+        // Show a temporary "Searching..." indicator until the first real chunk arrives
+        setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: "⚲ Searching..." } : m));
+        
+        let accumulatedContent = "";
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
+          // Decode values and split on the SSE payload boundary
           const chunkStr = decoder.decode(value, { stream: true });
           const events = chunkStr.split('\n\n');
-
+          
           for (const ev of events) {
             if (ev.startsWith('data: ')) {
               try {
                 const parsed = JSON.parse(ev.slice(6));
+                
                 if (parsed.type === 'sources') {
                   setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, sources: parsed.data } : m));
                 } else if (parsed.type === 'chunk') {
-                  setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: m.content + parsed.data } : m));
+                  // Accumulate the text locally
+                  accumulatedContent += parsed.data;
+                  // Immediately overwrite the whole string, erasing the "Searching..." loader securely
+                  setMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: accumulatedContent } : m));
                 } else if (parsed.type === 'error') {
                   console.error("Stream reported error:", parsed.error);
                 }
               } catch (e) {
-                // Ignore incomplete JSON chunks (very rare with \n\n split, but safe)
+                // Ignore incomplete JSON chunks (rare with \n\n split)
               }
             }
           }
