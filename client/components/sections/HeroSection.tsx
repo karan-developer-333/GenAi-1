@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { heroHeadline, heroSubtext, heroCta, EASE_SMOOTH } from '@/lib/motion';
-import HeroVisual from '@/components/animations/HeroVisual';
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
 
 const BADGE_TEXT = 'AI-POWERED KNOWLEDGE SYSTEM';
@@ -74,7 +73,7 @@ export default function HeroSection() {
           className="mt-12 flex flex-col sm:flex-row items-center gap-4 justify-center"
         >
           <a
-            href="/sign-up"
+            href="/settings"
             className="group relative px-8 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 flex items-center gap-2 overflow-hidden"
           >
             <span className="relative z-10">Get Started Now</span>
@@ -89,19 +88,6 @@ export default function HeroSection() {
             <Play className="w-4 h-4 fill-foreground/10" />
             Watch Demo
           </a>
-        </motion.div>
-
-        {/* Visual Element (inspired by central orb in ref) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 1 }}
-          className="mt-16 relative w-full max-w-4xl mx-auto group"
-        >
-          <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full scale-75 group-hover:scale-100 transition-transform duration-1000" />
-          <div className="relative rounded-3xl border border-white/10 glass-dark p-2 overflow-hidden shadow-2xl">
-            <HeroVisual />
-          </div>
         </motion.div>
       </div>
 

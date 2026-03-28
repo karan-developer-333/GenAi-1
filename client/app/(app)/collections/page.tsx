@@ -7,7 +7,7 @@ import SearchBar from '@/components/collections/SearchBar';
 import EmptyState from '@/components/collections/EmptyState';
 import { useState, useEffect } from 'react';
 import { useCollections, Item } from '@/hooks/useCollections';
-import { BookOpen, Search, Filter, Sparkles, Loader2 } from 'lucide-react';
+import { BookOpen, Search, Filter, Sparkles, Loader2, X, ExternalLink } from 'lucide-react';
 
 export default function CollectionsPage() {
   const { items, isLoading, queryItems, deleteItem } = useCollections();
@@ -33,20 +33,17 @@ export default function CollectionsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-16"
+          className="mb-2"
         >
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="space-y-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
+            <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#539AE9]/5 border border-[#539AE9]/20 text-[#539AE9] text-[10px] font-bold uppercase tracking-[0.2em] shadow-sm backdrop-blur-md">
                 <BookOpen className="w-3.5 h-3.5" />
-                Knowledge Matrix
+                All Saves
               </div>
-              <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight">
-                Neural <span className="text-[#539AE9]">Library</span>
+              <h1 className="text-5xl sm:text-5xl font-extrabold text-white tracking-tight">
+                Knowledge <span className="text-[#539AE9]">Base</span>
               </h1>
-              <p className="text-[#A8B3CF] text-lg max-w-2xl font-medium leading-relaxed">
-                Seamlessly traverse your curated domain of articles, technical papers, and cross-platform insights synchronized across your neural workspace.
-              </p>
             </div>
           </div>
         </motion.div>
@@ -55,10 +52,10 @@ export default function CollectionsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="mb-12"
+          className="mb-10"
         >
           <div className="relative group max-w-2xl">
-            <div className="absolute inset-0 bg-blue-600/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-blue-600/10 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
         </motion.div>
@@ -99,6 +96,99 @@ export default function CollectionsPage() {
                 </StaggerItem>
               ))}
             </StaggerReveal>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {selectedItem && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-sm"
+              onClick={() => setSelectedItem(null)}
+            >
+              <motion.div 
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative w-full max-w-6xl h-[90vh] md:h-[75vh] bg-[#09153C] border border-[#539AE9]/30 rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl shadow-[#2655C7]/20"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button 
+                  onClick={() => setSelectedItem(null)}
+                  className="absolute top-4 right-4 z-50 p-2 rounded-xl bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-md"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+                
+                {/* Left side: Media (Image or iframe) */}
+                <div className="relative w-full md:w-[55%] h-[40vh] md:h-full bg-black shrink-0 flex items-center justify-center border-b md:border-b-0 md:border-r border-[#539AE9]/20">
+                  {(() => {
+                    const getYoutubeEmbedUrl = (url: string) => {
+                      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                      const match = url.match(regExp);
+                      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+                    };
+                    const embedUrl = selectedItem.url.includes("youtube") ? getYoutubeEmbedUrl(selectedItem.url) : "";
+                    
+                    if (selectedItem.imageUrl) {
+                      return <img src={selectedItem.imageUrl} alt={selectedItem.title} className="w-full h-full object-contain" />;
+                    } else if (embedUrl) {
+                      return <iframe src={embedUrl} className="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />;
+                    } else {
+                      return <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#09153C] to-[#010419] gap-4"><BookOpen className="w-20 h-20 text-[#4B6C8F]" /><p className="text-[#4B6C8F] font-bold tracking-widest uppercase text-xs">No media preview</p></div>;
+                    }
+                  })()}
+                </div>
+                
+                {/* Right side: Content */}
+                <div className="p-6 md:p-8 overflow-y-auto w-full md:w-[45%] flex flex-col bg-gradient-to-b from-[#09153C] to-[#010419]">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-[#2655C7] text-white shadow-[#2655C7]/20 shadow-lg border border-white/10">
+                      {selectedItem.type}
+                    </span>
+                    <span className="text-xs text-[#4B6C8F] font-medium flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#539AE9] opacity-70" />
+                      {new Date(selectedItem.timestamp).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4 leading-tight tracking-tight">
+                    {selectedItem.title}
+                  </h2>
+                  
+                  {selectedItem.text && (
+                    <div className="mb-8">
+                      <h4 className="text-[10px] text-[#539AE9] font-black uppercase tracking-[0.2em] mb-2">Extracted Content</h4>
+                      <p className="text-[#A8B3CF] text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                        {selectedItem.text}
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div className="mt-auto pt-6">
+                    {selectedItem.tags && (
+                      <div className="mb-6">
+                        <h4 className="text-[10px] text-[#539AE9] font-black uppercase tracking-[0.2em] mb-3">Associated Tags</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedItem.tags.split(" ").map((tag: string, index: number) => (
+                            <span key={index} className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-[#539AE9]/10 text-[#539AE9] border border-[#539AE9]/20 hover:bg-[#539AE9]/20 transition-colors cursor-default">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    <a href={selectedItem.url} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] hover:shadow-[#539AE9]/30 hover:scale-[1.02] text-white rounded-2xl font-bold transition-all border border-white/10 shadow-xl shadow-blue-900/20">
+                      Open Original Source
+                      <ExternalLink className="w-5 h-5" />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

@@ -68,7 +68,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
         ) : embedUrl ? (
           <iframe
             src={embedUrl}
-            className="w-full h-full border-0"
+            className="w-full h-full border-0 pointer-events-none"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
@@ -92,7 +92,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             e.stopPropagation();
             onDelete();
           }}
-          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-2 rounded-xl bg-white/10 backdrop-blur-md text-red-400 hover:text-red-500 hover:bg-white/20 transition-all border border-white/10 shadow-lg"
+          className="absolute top-4 right-4 opacity-100 md:opacity-0 group-hover:opacity-100 p-2 rounded-xl bg-white/20 md:bg-white/10 backdrop-blur-md text-red-400 hover:text-red-500 hover:bg-white/20 transition-all border border-white/10 shadow-lg"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -138,7 +138,7 @@ export default function CollectionCard({ item, onClick, onDelete }: CollectionCa
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 font-bold text-[#539AE9] hover:text-white transition-all hover:translate-x-0.5"
+            className="flex items-center gap-1.5 font-bold text-[#539AE9] bg-[#539AE9]/10 md:bg-transparent px-3 py-1.5 md:p-0 rounded-lg md:rounded-none md:hover:text-white transition-all hover:translate-x-0.5"
             onClick={(e) => e.stopPropagation()}
           >
             OPEN

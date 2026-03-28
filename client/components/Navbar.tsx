@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Menu, X, ArrowRight, Brain } from 'lucide-react';
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
 
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { isSignedIn, isLoaded } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -20,8 +22,8 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{  opacity: 0 }}
+        animate={{  opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4',
@@ -47,20 +49,33 @@ export default function Navbar() {
 
             {/* Actions */}
             <div className="hidden lg:flex items-center gap-4">
-              <Link 
-                href="/sign-in" 
-                className="text-sm font-medium text-[#A8B3CF] hover:text-white transition-colors px-4 py-2"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/sign-up"
-                className="group relative px-6 py-2.5 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-[#539AE9]/30 transition-all duration-300 overflow-hidden flex items-center gap-2 border border-white/10"
-              >
-                <span className="relative z-10">Try it now</span>
-                <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#2655C7] to-[#539AE9] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </Link>
+              {(!isLoaded || !isSignedIn) && (
+                <SignInButton>
+                  <button className="text-sm font-medium text-[#A8B3CF] hover:text-white transition-colors px-4 py-2">
+                    Sign in
+                  </button>
+                </SignInButton>
+              )}
+
+              {isSignedIn && (
+                <>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: 'w-9 h-9',
+                      },
+                    }}
+                  />
+                  <Link
+                    href="/settings"
+                    className="group relative px-6 py-2.5 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-[#539AE9]/30 transition-all duration-300 overflow-hidden flex items-center gap-2 border border-white/10"
+                  >
+                    <span className="relative z-10">Dashboard</span>
+                    <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#2655C7] to-[#539AE9] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -91,8 +106,15 @@ export default function Navbar() {
               
               <div className="h-px bg-[#539AE9]/10 my-4" />
               <div className="flex flex-col gap-4">
-                <Link href="/sign-in" className="w-full text-center py-4 rounded-2xl text-[#A8B3CF] hover:bg-[#09153C] transition-all">Sign in</Link>
-                <Link href="/sign-up" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Try it free</Link>
+                {(!isLoaded || !isSignedIn) && (
+                  <>
+                    <Link href="/sign-in" className="w-full text-center py-4 rounded-2xl text-[#A8B3CF] hover:bg-[#09153C] transition-all">Sign in</Link>
+                    <Link href="/sign-up" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Try it free</Link>
+                  </>
+                )}
+                {isSignedIn && (
+                  <Link href="/settings" className="w-full py-4 bg-gradient-to-r from-[#153081] to-[#2655C7] text-white text-center rounded-2xl font-semibold shadow-lg">Dashboard</Link>
+                )}
               </div>
             </nav>
           </motion.div>

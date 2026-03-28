@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUserId, unauthorizedResponse } from '@/lib/auth';
 import { getAllItems, saveItem } from '@/services/server/ItemService';
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   const userId = await getAuthUserId(req);
   if (!userId) return unauthorizedResponse();
