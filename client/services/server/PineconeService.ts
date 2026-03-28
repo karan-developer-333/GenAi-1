@@ -1,29 +1,5 @@
 import { Pinecone } from "@pinecone-database/pinecone";
-// @ts-ignore
-import { pipeline, env } from '@xenova/transformers';
-
-// Force WASM backend for serverless / Vercel compatibility
-env.backends.onnx.wasm.numThreads = 1;
-env.backends.onnx.useGPU = false;
-env.allowLocalModels = false;
-env.useBrowserCache = false;
-env.backends.onnx.wasm.proxy = false;
-
-let embedder: any;
-
-async function getEmbedding(text: string) {
-  if (!embedder) {
-    embedder = await pipeline(
-      'feature-extraction',
-      'Xenova/all-MiniLM-L6-v2'
-    );
-  }
-  const output = await embedder(text, {
-    pooling: 'mean',
-    normalize: true
-  });
-  return Array.from(output.data);
-}
+import { getEmbeddings } from '@/lib/embeddings';
 
 let cachedHost: string | null = null;
 
@@ -63,7 +39,7 @@ export const uploadToPinecone = async (data: any) => {
 
     const vectors = await Promise.all(cleanRecords.map(async (record) => {
       const textToEmbed = record.text || record.title || "";
-      const values = await getEmbedding(textToEmbed);
+      const values = await getEmbeddings(textToEmbed);
       if (!record.id) return null;
       return {
         id: record.id,
@@ -107,7 +83,7 @@ export const uploadToPinecone = async (data: any) => {
 export const searchPinecone = async (queryObject: { query: string; userId: string }) => {
   try {
     const { query, userId } = queryObject;
-    const embedding = await getEmbedding(query);
+    const embedding = await getEmbeddings(query);
     const host = await getIndexHost();
 
     const response = await fetch(`https://${host}/query`, {

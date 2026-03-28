@@ -1,37 +1,13 @@
 import { getIndexHost } from './PineconeService';
 import { toGraph } from './GraphTransformer';
-// @ts-ignore
-import { pipeline, env } from '@xenova/transformers';
-
-// Force WASM backend for serverless / Vercel compatibility
-env.backends.onnx.wasm.numThreads = 1;
-env.backends.onnx.useGPU = false;
-env.allowLocalModels = false;
-env.useBrowserCache = false;
-env.backends.onnx.wasm.proxy = false;
-
-let embedder: any;
-
-async function getEmbedding(text: string) {
-  if (!embedder) {
-    embedder = await pipeline(
-      'feature-extraction',
-      'Xenova/all-MiniLM-L6-v2'
-    );
-  }
-  const output = await embedder(text, {
-    pooling: 'mean',
-    normalize: true,
-  });
-  return Array.from(output.data);
-}
+import { getEmbeddings } from '@/lib/embeddings';
 
 /**
  * Run a semantic search against Pinecone with topK=10
  * and return D3-formatted graph data.
  */
 export async function searchAndBuildGraph(query: string, userId: string) {
-  const embedding = await getEmbedding(query);
+  const embedding = await getEmbeddings(query);
   const host = await getIndexHost();
 
   const response = await fetch(`https://${host}/query`, {
