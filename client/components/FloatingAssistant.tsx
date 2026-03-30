@@ -115,7 +115,7 @@ export const FloatingAssistant = () => {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className={cn(
-              "fixed z-50 flex flex-col rounded-lg overflow-hidden shadow-2xl border border-border bg-blue-950",
+              "fixed z-50 flex flex-col rounded-lg overflow-hidden shadow-2xl border border-border bg-background",
               isMobile 
                 ? "bottom-20 w-full max-w-none h-[calc(100vh-80px)]" 
                 : "bottom-24 right-6 w-96 max-w-[calc(100vw-48px)] h-[500px] max-h-[calc(100vh-180px)]"

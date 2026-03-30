@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserButton } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { HiDownload } from 'react-icons/hi';
-import { Brain } from 'lucide-react';
-import ExportButton from '@/components/ExportButton';
+import { Brain, Sun, Moon } from 'lucide-react';
 
 const NAV_LINKS = [ 
   { label: 'Collections', href: '/collections'},
@@ -21,12 +21,18 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
+  
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+  
+  const handleToggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }
 
   return (
     <>
@@ -76,7 +82,14 @@ export default function Navbar() {
 
             {/* Auth area */}
             <div className="hidden md:flex items-center gap-3">
-              <ExportButton />
+              <button
+                onClick={handleToggleTheme}
+                className="w-9 h-9 rounded-lg bg-muted/50 border border-border hover:bg-muted transition-colors flex items-center justify-center"
+                title="Toggle theme"
+              >
+                <Sun className="w-4 h-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute w-4 h-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              </button>
               <a
                 href="/extension.zip"
                 download="mnemo-ai-extension.zip"
@@ -152,8 +165,15 @@ export default function Navbar() {
                 );
               })}
               <div className="border-t border-border mt-3 pt-4 flex flex-col gap-3">
-                <ExportButton variant="dropdown" />
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={handleToggleTheme}
+                    className="w-9 h-9 rounded-lg bg-muted/50 border border-border hover:bg-muted transition-colors flex items-center justify-center"
+                    title="Toggle theme"
+                  >
+                    <Sun className="w-4 h-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute w-4 h-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  </button>
                   <UserButton />
                 </div>
               </div>

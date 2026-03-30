@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
+import { useTheme } from 'next-themes';
 import { GraphNode, GraphLink, GraphData, ForceGraphProps } from './graph.types';
 
 /* ─── Premium AI palette ─── */
@@ -16,6 +17,14 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const simulationRef = useRef<d3.Simulation<GraphNode, GraphLink> | null>(null);
+  const { theme } = useTheme();
+
+  // Theme-aware colors
+  const isDark = theme === 'dark';
+  const textColor = isDark ? '#FFFFFF' : '#09153C';
+  const strokeColor = isDark ? '#FFFFFF' : '#09153C';
+  const linkColor = isDark ? 'rgba(83,154,233,0.15)' : 'rgba(21,48,129,0.2)';
+  const arrowColor = isDark ? 'rgba(83,154,233,0.3)' : 'rgba(21,48,129,0.4)';
 
   const destroySimulation = useCallback(() => {
     if (simulationRef.current) {
@@ -73,7 +82,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', 'rgba(83,154,233,0.3)');
+      .attr('fill', arrowColor);
 
     // Tooltip
     const tooltip = d3
@@ -107,7 +116,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .selectAll('line')
       .data(links)
       .join('line')
-      .attr('stroke', 'rgba(83,154,233,0.15)')
+      .attr('stroke', linkColor)
       .attr('stroke-opacity', 0.6)
       .attr('stroke-width', (d) => Math.max(1, d.value * 5))
       .attr('marker-end', 'url(#graph-arrowhead)');
@@ -120,7 +129,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .data(links)
       .join('text')
       .attr('font-size', 10)
-      .attr('fill', 'white')
+      .attr('fill', textColor)
       .attr('text-anchor', 'middle')
       .text((d) => (d.value ? d.value.toFixed(2) : ''));
 
@@ -139,7 +148,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .append('circle')
       .attr('r', (d) => (d.group === 1 ? 18 : 12))
       .attr('fill', (d) => GROUP_COLORS[d.group] || '#8a8a8a')
-      .attr('stroke', '#ffffff')
+      .attr('stroke', strokeColor)
       .attr('stroke-width', 2.5)
       .style('filter', 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))');
 
@@ -154,7 +163,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       .append('text')
       .attr('dy', (d) => (d.group === 1 ? 30 : 24))
       .attr('text-anchor', 'middle')
-      .attr('fill', 'white')
+      .attr('fill', textColor)
       .attr('font-size', (d) => (d.group === 1 ? 13 : 11))
       .attr('font-weight', (d) => (d.group === 1 ? 700 : 400))
       .text((d) => {
@@ -226,7 +235,7 @@ export default function ForceGraph({ data, onNodeClick }: ForceGraphProps) {
       resizeObserver.disconnect();
       tooltip.remove();
     };
-  }, [data, onNodeClick, destroySimulation]);
+  }, [data, onNodeClick, destroySimulation, theme]);
 
   function drag(simulation: d3.Simulation<GraphNode, GraphLink>) {
     function dragstarted(event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>) {

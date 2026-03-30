@@ -22,7 +22,7 @@
 .graph-orb-1 {
   width: 600px;
   height: 600px;
-  background: #153081;
+  background: rgba(83, 154, 233, 0.15);
   top: -200px;
   left: -100px;
   animation: graph-float 20s ease-in-out infinite alternate;
@@ -31,7 +31,7 @@
 .graph-orb-2 {
   width: 500px;
   height: 500px;
-  background: #539AE9;
+  background: rgba(21, 48, 129, 0.1);
   bottom: -180px;
   right: -100px;
   animation: graph-float 25s ease-in-out infinite alternate-reverse;
@@ -53,11 +53,11 @@
   font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #FFFFFF;
+  color: var(--foreground);
 }
 
 .graph-subtitle {
-  color: #A8B3CF;
+  color: var(--muted-foreground);
   font-size: 1rem;
   margin-top: 8px;
   max-width: 600px;
@@ -88,18 +88,18 @@
   left: 20px;
   width: 20px;
   height: 20px;
-  color: #4B6C8F;
+  color: var(--muted-foreground);
   pointer-events: none;
 }
 
 .graph-search-wrapper input {
   width: 100%;
   padding: 16px 48px 16px 54px;
-  border: 1px solid rgba(83, 154, 233, 0.15);
+  border: 1px solid var(--border);
   border-radius: 1.25rem;
-  background: rgba(9, 21, 60, 0.5);
+  background: var(--card);
   backdrop-filter: blur(20px);
-  color: #FFFFFF;
+  color: var(--foreground);
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s ease;
@@ -107,13 +107,13 @@
 }
 
 .graph-search-wrapper input::placeholder {
-  color: #4B6C8F;
+  color: var(--muted-foreground);
 }
 
 .graph-search-wrapper input:focus {
   outline: none;
-  border-color: #539AE9;
-  background: rgba(9, 21, 60, 0.7);
+  border-color: var(--accent);
+  background: var(--card);
   box-shadow: 0 0 0 4px rgba(83, 154, 233, 0.1), 0 8px 32px rgba(1, 4, 25, 0.5);
 }
 
@@ -122,7 +122,7 @@
   right: 14px;
   background: none;
   border: none;
-  color: #4B6C8F;
+  color: var(--muted-foreground);
   font-size: 16px;
   cursor: pointer;
   padding: 6px;
@@ -131,16 +131,16 @@
 }
 
 .graph-clear-btn:hover {
-  color: #FFFFFF;
-  background: rgba(83, 154, 233, 0.1);
+  color: var(--foreground);
+  background: var(--muted);
 }
 
 .graph-search-btn {
   padding: 16px 28px;
   border: none;
   border-radius: 1.25rem;
-  background: linear-gradient(135deg, #153081 0%, #2655C7 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--primary-foreground);
   font-size: 0.95rem;
   font-weight: 700;
   font-family: inherit;
@@ -154,7 +154,7 @@
 .graph-search-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(21, 48, 129, 0.4);
-  background: linear-gradient(135deg, #2655C7 0%, #539AE9 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
 }
 
 .graph-search-btn:disabled {
@@ -196,13 +196,13 @@
   justify-content: center;
   padding: 12px 24px;
   font-size: 0.8rem;
-  color: #A8B3CF;
+  color: var(--muted-foreground);
   font-weight: 600;
   flex-shrink: 0;
-  background: rgba(9, 21, 60, 0.3);
+  background: var(--card);
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(83, 154, 233, 0.1);
-  border-bottom: 1px solid rgba(83, 154, 233, 0.1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .graph-legend-item {
@@ -242,10 +242,10 @@
   pointer-events: none;
   padding: 14px 20px;
   border-radius: 1.25rem;
-  background: rgba(9, 21, 60, 0.85);
+  background: var(--popover);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(83, 154, 233, 0.2);
-  color: #FFFFFF;
+  border: 1px solid var(--border);
+  color: var(--popover-foreground);
   font-size: 0.85rem;
   line-height: 1.6;
   max-width: 320px;
@@ -254,7 +254,7 @@
 }
 
 .graph-tooltip .url {
-  color: #539AE9;
+  color: var(--accent);
   font-size: 0.78rem;
   word-break: break-all;
   font-weight: 600;
@@ -270,7 +270,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  color: #4B6C8F;
+  color: var(--muted-foreground);
 }
 
 .graph-empty-icon {
@@ -290,7 +290,7 @@
   background: rgba(1, 4, 25, 0.7);
   backdrop-filter: blur(12px);
   z-index: 50;
-  color: #A8B3CF;
+  color: var(--muted-foreground);
 }
 
 .graph-pulse-loader {
@@ -311,7 +311,7 @@
 .graph-hint {
   text-align: center;
   font-size: 0.8rem;
-  color: #4B6C8F;
+  color: var(--muted-foreground);
   padding: 12px 0 20px;
   flex-shrink: 0;
   font-weight: 500;
